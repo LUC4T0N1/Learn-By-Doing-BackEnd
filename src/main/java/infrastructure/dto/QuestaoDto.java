@@ -1,12 +1,14 @@
 package infrastructure.dto;
 
 import domain.Alternativa;
-import domain.Prova;
 import domain.Questao;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+@Schema(
+        name = "Questões",
+        description = "JSON com informações sobre uma questão específica")
 public class QuestaoDto {
     public String enunciado;
     public BigDecimal valor;
