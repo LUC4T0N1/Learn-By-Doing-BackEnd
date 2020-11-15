@@ -26,6 +26,8 @@ public class Questao extends ObjetoDeDominio{
 
 
 
+
+
     public static Questao instanciar(QuestaoDto dto, List<Alternativa> alternativas){
         Questao questao = new Questao();
         questao.setEnunciado(dto.enunciado);

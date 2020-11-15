@@ -22,14 +22,14 @@ public abstract class ObjetoDeDominio {
     @Temporal(TemporalType.TIMESTAMP)
     private Date ultimaAlteracao;
 
-    private String mandante;
+    private String usuario;
 
-    public String getMandante() {
-        return mandante;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setMandante(String mandante) {
-        this.mandante = mandante;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public Long getId() {

@@ -10,6 +10,15 @@ public class Prova extends ObjetoDeDominio{
     @Column
     private String nome;
 
+    @Column
+    private Long dificuldade;
+
+    @Column
+    private Long realizacoes;
+
+    @Column
+    private Boolean publica;
+
     @ManyToMany
     @JoinTable(
             name = "prova_questao")
@@ -18,12 +27,22 @@ public class Prova extends ObjetoDeDominio{
     @Column(name = "nota_maxima")
     private BigDecimal notaMaxima;
 
-    public static Prova instanciar(String nome, BigDecimal notaMaxima, List<Questao> questoes){
+    public static Prova instanciar(String nome, BigDecimal notaMaxima, List<Questao> questoes, String usuario, Boolean publica){
         Prova prova = new Prova();
         prova.setNome(nome);
         prova.setNotaMaxima(notaMaxima);
         prova.setQuestoes(questoes);
+        prova.setUsuario(usuario);
+        prova.setPublica(publica);
         return prova;
+    }
+
+    public Boolean getPublica() {
+        return publica;
+    }
+
+    public void setPublica(Boolean publica) {
+        this.publica = publica;
     }
 
     public String getNome() {
@@ -48,5 +67,21 @@ public class Prova extends ObjetoDeDominio{
 
     public void setNotaMaxima(BigDecimal notaMaxima) {
         this.notaMaxima = notaMaxima;
+    }
+
+    public Long getDificuldade() {
+        return dificuldade;
+    }
+
+    public void setDificuldade(Long dificuldade) {
+        this.dificuldade = dificuldade;
+    }
+
+    public Long getRealizacoes() {
+        return realizacoes;
+    }
+
+    public void setRealizacoes(Long realizacoes) {
+        this.realizacoes = realizacoes;
     }
 }

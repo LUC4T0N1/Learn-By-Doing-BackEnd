@@ -1,10 +1,12 @@
 package interfaces.controller;
 
+import infrastructure.dto.BuscaPaginadaDto;
 import infrastructure.dto.ConteudoDto;
 import infrastructure.repository.ConteudoRepository;
 import interfaces.controller.resposta.RespostaAPI;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -12,6 +14,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.stream.Collectors;
 
 @RequestScoped
 @Path("api/conteudo")
@@ -31,7 +34,7 @@ public class ConteudoController {
     public Response cadastrarConteudo(ConteudoDto dto) {
         return api.retornar(
                 () -> {
-                    conteudoRepository.cadastrarConteudo(dto.paraDominio(dto.nome));
+                    conteudoRepository.cadastrarConteudo(dto.paraDominio(dto.nome, 0L));
                     return RespostaAPI.sucesso("Conteúdo cadastrado com sucesso!");
                 },dto);
     }
@@ -49,4 +52,27 @@ public class ConteudoController {
                 },dto);
     }
 
+
+    @GET
+    @Path("/buscarOA")
+    @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
+    @Operation(summary = "Obter conteúdos por ordem alfabética", description = "Faz uma busca paginada dos conteúdos ordenados por ordem alfabética")
+    @Transactional
+    public Response buscarConteudosPorOrdemAlfabetica(@QueryParam("pagina") Integer pagina) {
+        return api.retornar(
+                        conteudoRepository.buscarPorOrdemAlfabetica(pagina)
+                );
     }
+
+    @GET
+    @Path("/buscarNP")
+    @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
+    @Operation(summary = "Obter conteúdo por quantidade de provas", description = "Faz uma busca paginada dos conteúdos ordenados por quantidade de provas")
+    @Transactional
+    public Response buscarConteudosPorNumeroDeProvas(@QueryParam("pagina") Integer pagina) {
+        return api.retornar(
+                conteudoRepository.buscarPorNumeroDeProvas(pagina)
+        );
+    }
+
+}

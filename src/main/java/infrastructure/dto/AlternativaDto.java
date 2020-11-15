@@ -14,4 +14,18 @@ public class AlternativaDto {
         return Alternativa.instanciar(dto);
     }
 
+    public static AlternativaDto instanciar(Alternativa alternativa){
+        AlternativaDto alternativaDto = new AlternativaDto();
+        alternativaDto.setCorreta(alternativa.getCorreta());
+        alternativaDto.setEnunciado(alternativa.getEnunciado());
+        return alternativaDto;
+    }
+
+    public void setEnunciado(String enunciado) {
+        this.enunciado = enunciado;
+    }
+
+    public void setCorreta(boolean correta) {
+        this.correta = correta;
+    }
 }

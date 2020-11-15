@@ -10,9 +10,31 @@ public class ConteudoDto {
     public String nome;
     public Long idProva;
     public Long idConteudo;
+    public Long numeroProvas;
 
-    public Conteudo paraDominio(String nome){
-        return Conteudo.instanciar(nome);
+    protected ConteudoDto(){}
+
+    public Conteudo paraDominio(String nome, Long numeroProvas){
+        return Conteudo.instanciar(nome, numeroProvas);
     }
 
+    public static ConteudoDto instanciar(Conteudo conteudo){
+        ConteudoDto conteudoDto = new ConteudoDto();
+        conteudoDto.setNome(conteudo.getNome());
+        conteudoDto.setIdConteudo(conteudo.getId());
+        conteudoDto.setNumeroProvas(conteudo.getNumeroProvas());
+        return conteudoDto;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setIdConteudo(Long idConteudo) {
+        this.idConteudo = idConteudo;
+    }
+
+    public void setNumeroProvas(Long numeroProvas) {
+        this.numeroProvas = numeroProvas;
+    }
 }

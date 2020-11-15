@@ -1,9 +1,7 @@
 package interfaces.controller;
 
 import domain.Alternativa;
-import domain.Questao;
 import infrastructure.dto.AlternativaDto;
-import infrastructure.dto.ProvaDto;
 import infrastructure.dto.QuestaoDto;
 import infrastructure.repository.AlternativaRepository;
 import infrastructure.repository.QuestaoRepository;
