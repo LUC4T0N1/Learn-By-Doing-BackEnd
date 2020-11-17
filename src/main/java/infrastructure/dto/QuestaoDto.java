@@ -17,8 +17,8 @@ public class QuestaoDto {
     public List<AlternativaDto> alternativas;
     public String resposta;
 
-    public Questao paraDominio(QuestaoDto dto, List<Alternativa> alternativas){
-        return Questao.instanciar(dto, alternativas);
+    public Questao paraDominio(QuestaoDto dto, List<Alternativa> alternativas, String usuario){
+        return Questao.instanciar(dto, alternativas, usuario);
     }
 
     public static QuestaoDto instanciar(Questao questao){

@@ -20,6 +20,7 @@ public class RealizarProvaDto {
     public int questoesCorrigidas;
     public int totalQuestoes;
     public BigDecimal notaAluno;
+    public Boolean totalmenteCorrigida;
     public List<QuestaoRespondidaDto> questoesRespondidasDto;
 
     protected RealizarProvaDto(){}
@@ -32,6 +33,7 @@ public class RealizarProvaDto {
         realizarProvaDto.setNotaMaxima(provaRespondida.getProva().getNotaMaxima());
         realizarProvaDto.setQuestoesCorrigidas(provaRespondida.getQuestoesCorrigidas());
         realizarProvaDto.setTotalQuestoes(provaRespondida.getProva().getQuestoes().size());
+        realizarProvaDto.setTotalmenteCorrigida(provaRespondida.getCorrigida());
         List<QuestaoRespondidaDto> questoesRespondidasDto = new ArrayList<>();
         System.out.println(provaRespondida.getQuestoesRespondidas().size());
         for(QuestaoRespondida questaoRespondida : provaRespondida.getQuestoesRespondidas()){
@@ -99,5 +101,9 @@ public class RealizarProvaDto {
 
     public void setQuestoesRespondidasDto(List<QuestaoRespondidaDto> questoesRespondidasDto) {
         this.questoesRespondidasDto = questoesRespondidasDto;
+    }
+
+    public void setTotalmenteCorrigida(Boolean totalmenteCorrigida) {
+        this.totalmenteCorrigida = totalmenteCorrigida;
     }
 }

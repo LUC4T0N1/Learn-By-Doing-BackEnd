@@ -1,7 +1,11 @@
 package domain;
 
+import application.utlis.DataUtils;
+import infrastructure.dto.ProvaDto;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "prova")
@@ -13,8 +17,17 @@ public class Prova extends ObjetoDeDominio{
     @Column
     private BigDecimal tempo;
 
-    @Column
-    private Long dificuldade;
+    @Column(name = "quantidade_questoes")
+    private int quantidadeQuestoes;
+
+    @Column(name = "data_inicial")
+    private Date dataInicial;
+
+    @Column(name = "data_final")
+    private Date dataFinal;
+
+    @Column(name = "media_notas")
+    private BigDecimal mediaNotas;
 
     @Column
     private Long realizacoes;
@@ -30,14 +43,21 @@ public class Prova extends ObjetoDeDominio{
     @Column(name = "nota_maxima")
     private BigDecimal notaMaxima;
 
-    public static Prova instanciar(String nome, BigDecimal notaMaxima, List<Questao> questoes, String usuario, Boolean publica){
+    public static Prova instanciar(ProvaDto dto, List<Questao> questoes, String usuario, Boolean publica){
         Prova prova = new Prova();
-        prova.setNome(nome);
-        prova.setNotaMaxima(notaMaxima);
+        prova.setNome(dto.nome);
+        prova.setNotaMaxima(dto.notaMaxima);
         prova.setQuestoes(questoes);
         prova.setUsuario(usuario);
         prova.setPublica(publica);
         prova.setRealizacoes(0L);
+        prova.setMediaNotas(new BigDecimal(0));
+        prova.setQuantidadeQuestoes(questoes.size());
+        prova.setTempo(dto.tempo);
+        if(dto.dataInicial!= null && dto.dataFinal!= null){
+            prova.setDataInicial(DataUtils.converterParaDate(dto.dataInicial));
+            prova.setDataFinal(DataUtils.converterParaDate(dto.dataFinal));
+        }
         return prova;
     }
 
@@ -51,6 +71,14 @@ public class Prova extends ObjetoDeDominio{
 
     public String getNome() {
         return nome;
+    }
+
+    public BigDecimal getMediaNotas() {
+        return mediaNotas;
+    }
+
+    public void setMediaNotas(BigDecimal mediaNotas) {
+        this.mediaNotas = mediaNotas;
     }
 
     public void setNome(String nome) {
@@ -73,13 +101,8 @@ public class Prova extends ObjetoDeDominio{
         this.notaMaxima = notaMaxima;
     }
 
-    public Long getDificuldade() {
-        return dificuldade;
-    }
 
-    public void setDificuldade(Long dificuldade) {
-        this.dificuldade = dificuldade;
-    }
+
 
     public Long getRealizacoes() {
         return realizacoes;
@@ -87,5 +110,37 @@ public class Prova extends ObjetoDeDominio{
 
     public void setRealizacoes(Long realizacoes) {
         this.realizacoes = realizacoes;
+    }
+
+    public BigDecimal getTempo() {
+        return tempo;
+    }
+
+    public void setTempo(BigDecimal tempo) {
+        this.tempo = tempo;
+    }
+
+    public int getQuantidadeQuestoes() {
+        return quantidadeQuestoes;
+    }
+
+    public void setQuantidadeQuestoes(int quantidadeQuestoes) {
+        this.quantidadeQuestoes = quantidadeQuestoes;
+    }
+
+    public Date getDataInicial() {
+        return dataInicial;
+    }
+
+    public void setDataInicial(Date dataInicial) {
+        this.dataInicial = dataInicial;
+    }
+
+    public Date getDataFinal() {
+        return dataFinal;
+    }
+
+    public void setDataFinal(Date dataFinal) {
+        this.dataFinal = dataFinal;
     }
 }

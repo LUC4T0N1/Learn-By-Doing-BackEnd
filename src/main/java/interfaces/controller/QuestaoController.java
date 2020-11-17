@@ -34,6 +34,10 @@ public class QuestaoController {
     @Inject
     RespostaAPI api;
 
+    //@Inject
+    //@Claim("usuario")
+    String usuario = "usuario";
+
     @POST
     @Transactional
     @Tag(name = "Questão", description = "Controllers de Questão")
@@ -43,10 +47,10 @@ public class QuestaoController {
                 () -> {
                     List<Alternativa> alternativas = new ArrayList<>();
                     for (AlternativaDto alternativaDto : dto.alternativas) {
-                        alternativas.add(Alternativa.instanciar(alternativaDto));
+                        alternativas.add(Alternativa.instanciar(alternativaDto, usuario));
                     }
                     alternativas = alternativaRepository.cadastrarAlternativas(alternativas);
-                    questaoRepository.cadastrarQuestao(dto.paraDominio(dto, alternativas));
+                    questaoRepository.cadastrarQuestao(dto.paraDominio(dto, alternativas, usuario));
                     return RespostaAPI.sucesso("Questão cadastrada com sucesso!");
                 }, dto);
     }

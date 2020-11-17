@@ -35,13 +35,14 @@ public class Questao extends ObjetoDeDominio{
     }
 
 
-    public static Questao instanciar(QuestaoDto dto, List<Alternativa> alternativas){
+    public static Questao instanciar(QuestaoDto dto, List<Alternativa> alternativas, String usuario){
         Questao questao = new Questao();
         questao.setEnunciado(dto.enunciado);
         questao.setMultipaEscolha(dto.multiplaEscolha);
         questao.setAlternativas(alternativas);
         questao.setValor(dto.valor);
         questao.setRespostaCorreta(dto.resposta);
+        questao.setUsuario(usuario);
         return questao;
     }
 

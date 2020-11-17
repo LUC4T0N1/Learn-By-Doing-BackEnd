@@ -14,6 +14,9 @@ public class ProvaRespondida extends ObjetoDeDominio{
     @ManyToOne
     private Prova prova;
 
+    @Column
+    private Boolean corrigida;
+
     @Column(name = "nome_aluno")
     private String nomeAluno;
 
@@ -36,6 +39,7 @@ public class ProvaRespondida extends ObjetoDeDominio{
         provaRespondida.setProva(prova);
         provaRespondida.setUsuario(usuario);
         provaRespondida.setNotaAluno(new BigDecimal(0));
+        provaRespondida.setCorrigida(false);
         return  provaRespondida;
     }
 
@@ -86,5 +90,13 @@ public class ProvaRespondida extends ObjetoDeDominio{
 
     public void setQuestoesCorrigidas(int questoesCorrigidas) {
         this.questoesCorrigidas = questoesCorrigidas;
+    }
+
+    public Boolean getCorrigida() {
+        return corrigida;
+    }
+
+    public void setCorrigida(Boolean corrigida) {
+        this.corrigida = corrigida;
     }
 }

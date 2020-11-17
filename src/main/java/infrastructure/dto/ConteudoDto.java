@@ -14,8 +14,8 @@ public class ConteudoDto {
 
     protected ConteudoDto(){}
 
-    public Conteudo paraDominio(String nome, Long numeroProvas){
-        return Conteudo.instanciar(nome, numeroProvas);
+    public Conteudo paraDominio(String nome, Long numeroProvas, String usuario){
+        return Conteudo.instanciar(nome, numeroProvas, usuario);
     }
 
     public static ConteudoDto instanciar(Conteudo conteudo){

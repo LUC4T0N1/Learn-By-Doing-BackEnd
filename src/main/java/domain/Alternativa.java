@@ -17,11 +17,11 @@ public class Alternativa extends ObjetoDeDominio{
     @ManyToOne
     private Questao questao;
 
-    public static Alternativa instanciar(AlternativaDto dto){
+    public static Alternativa instanciar(AlternativaDto dto, String usuario){
         Alternativa alternativa = new Alternativa();
         alternativa.setCorreta(dto.correta);
         alternativa.setEnunciado(dto.enunciado);
-
+        alternativa.setUsuario(usuario);
         return alternativa;
     }
 

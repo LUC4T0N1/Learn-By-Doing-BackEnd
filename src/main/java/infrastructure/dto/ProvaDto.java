@@ -17,19 +17,22 @@ public class ProvaDto {
     public List<Long> idsQuestoes;
     public Long id;
     public Boolean publica;
-    public Long dificuldade;
+    public BigDecimal mediaNotas;
     public Long popularidade;
     public List<QuestaoDto> questoes;
+    public BigDecimal tempo;
+    public String dataInicial;
+    public String dataFinal;
 
     public Prova paraDominio(ProvaDto dto, List<Questao> questoes, String usuario, Boolean publica){
-        return Prova.instanciar(dto.nome, dto.notaMaxima, questoes, usuario, publica);
+        return Prova.instanciar(dto, questoes, usuario, publica);
     }
 
     public static ProvaDto instanciar(Prova prova){
         ProvaDto provaDto = new ProvaDto();
         provaDto.setNome(prova.getNome());
         provaDto.setId(prova.getId());
-        provaDto.setDificuldade(prova.getDificuldade());
+        provaDto.setMediaNotas(prova.getMediaNotas());
         provaDto.setPopularidade(prova.getRealizacoes());
         return provaDto;
     }
@@ -43,8 +46,8 @@ public class ProvaDto {
     }
 
 
-    public void setDificuldade(Long dificuldade) {
-        this.dificuldade = dificuldade;
+    public void setMediaNotas(BigDecimal mediaNotas) {
+        this.mediaNotas = mediaNotas;
     }
 
     public Long getPopularidade() {

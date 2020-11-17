@@ -103,7 +103,7 @@ public class ProvaController {
     public Response realizarProva(RealizarProvaDto dto) {
         return api.retornar(
                 () -> {
-                    provaRespondidaRepository.realizarProva(dto, "a");
+                    provaRespondidaRepository.realizarProva(dto, "usuario2");
                     return RespostaAPI.sucesso("Prova realizada com sucesso!");
                 },dto);
     }

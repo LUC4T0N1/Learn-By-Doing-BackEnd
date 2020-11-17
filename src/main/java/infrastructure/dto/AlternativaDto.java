@@ -10,9 +10,9 @@ public class AlternativaDto {
     public String enunciado;
     public boolean correta;
 
-    public Alternativa paraDominio(AlternativaDto dto){
-        return Alternativa.instanciar(dto);
-    }
+//    public Alternativa paraDominio(AlternativaDto dto){
+//        return Alternativa.instanciar(dto);
+//    }
 
     public static AlternativaDto instanciar(Alternativa alternativa){
         AlternativaDto alternativaDto = new AlternativaDto();

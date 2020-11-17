@@ -16,10 +16,11 @@ public class Conteudo extends ObjetoDeDominio{
             name = "conteudo_prova")
     private List<Prova> provas;
 
-    public static Conteudo instanciar(String nome, Long numeroProvas){
+    public static Conteudo instanciar(String nome, Long numeroProvas, String usuario){
         Conteudo conteudo = new Conteudo();
         conteudo.setNome(nome);
         conteudo.setNumeroProvas(numeroProvas);
+        conteudo.setUsuario(usuario);
         return conteudo;
     }
 

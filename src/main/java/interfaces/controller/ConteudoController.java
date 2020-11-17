@@ -1,6 +1,5 @@
 package interfaces.controller;
 
-import infrastructure.dto.BuscaPaginadaDto;
 import infrastructure.dto.ConteudoDto;
 import infrastructure.repository.ConteudoRepository;
 import interfaces.controller.resposta.RespostaAPI;
@@ -14,7 +13,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.stream.Collectors;
 
 @RequestScoped
 @Path("api/conteudo")
@@ -26,6 +24,9 @@ public class ConteudoController {
     ConteudoRepository conteudoRepository;
     @Inject
     RespostaAPI api;
+    //@Inject
+    //@Claim("usuario")
+    String usuario = "usuario";
 
     @POST
     @Transactional
@@ -34,7 +35,7 @@ public class ConteudoController {
     public Response cadastrarConteudo(ConteudoDto dto) {
         return api.retornar(
                 () -> {
-                    conteudoRepository.cadastrarConteudo(dto.paraDominio(dto.nome, 0L));
+                    conteudoRepository.cadastrarConteudo(dto.paraDominio(dto.nome, 0L, usuario));
                     return RespostaAPI.sucesso("Conteúdo cadastrado com sucesso!");
                 },dto);
     }
