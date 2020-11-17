@@ -15,6 +15,7 @@ public class QuestaoDto {
     public BigDecimal valor;
     public Boolean multiplaEscolha;
     public List<AlternativaDto> alternativas;
+    public String resposta;
 
     public Questao paraDominio(QuestaoDto dto, List<Alternativa> alternativas){
         return Questao.instanciar(dto, alternativas);
@@ -22,6 +23,7 @@ public class QuestaoDto {
 
     public static QuestaoDto instanciar(Questao questao){
         QuestaoDto questaoDto = new QuestaoDto();
+        questaoDto.setResposta(questao.getRespostaCorreta());
         questaoDto.setEnunciado(questao.getEnunciado());
         questaoDto.setMultiplaEscolha(questao.isMultipaEscolha());
         questaoDto.setValor(questao.getValor());
@@ -39,6 +41,10 @@ public class QuestaoDto {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public void setResposta(String resposta) {
+        this.resposta = resposta;
     }
 
     public void setMultiplaEscolha(Boolean multiplaEscolha) {

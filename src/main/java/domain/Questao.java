@@ -12,6 +12,9 @@ public class Questao extends ObjetoDeDominio{
     @Column
     private String enunciado;
 
+    @Column(name = "resposta_correta")
+    private String respostaCorreta;
+
     @Column
     private BigDecimal valor;
 
@@ -25,7 +28,11 @@ public class Questao extends ObjetoDeDominio{
     private boolean publica;
 
 
-
+    public static Questao instanciarPorId(Long id){
+        Questao questao = new Questao();
+        questao.setId(id);
+        return questao;
+    }
 
 
     public static Questao instanciar(QuestaoDto dto, List<Alternativa> alternativas){
@@ -34,6 +41,7 @@ public class Questao extends ObjetoDeDominio{
         questao.setMultipaEscolha(dto.multiplaEscolha);
         questao.setAlternativas(alternativas);
         questao.setValor(dto.valor);
+        questao.setRespostaCorreta(dto.resposta);
         return questao;
     }
 
@@ -77,5 +85,11 @@ public class Questao extends ObjetoDeDominio{
         this.multipaEscolha = multipaEscolha;
     }
 
+    public String getRespostaCorreta() {
+        return respostaCorreta;
+    }
 
+    public void setRespostaCorreta(String respostaCorreta) {
+        this.respostaCorreta = respostaCorreta;
+    }
 }

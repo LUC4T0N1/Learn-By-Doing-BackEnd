@@ -1,9 +1,12 @@
 package interfaces.controller;
 
 import domain.Questao;
+import infrastructure.dto.CorrigirQuestoesDissertativasDto;
 import infrastructure.dto.ProvaDto;
 import infrastructure.dto.BuscarProvasDto;
+import infrastructure.dto.RealizarProvaDto;
 import infrastructure.repository.ProvaRepository;
+import infrastructure.repository.ProvaRespondidaRepository;
 import infrastructure.repository.QuestaoRepository;
 import interfaces.controller.resposta.RespostaAPI;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -27,6 +30,8 @@ public class ProvaController {
     ProvaRepository provaRepository;
     @Inject
     QuestaoRepository questaoRepository;
+    @Inject
+    ProvaRespondidaRepository provaRespondidaRepository;
     @Inject
     RespostaAPI api;
     //@Inject
@@ -78,4 +83,55 @@ public class ProvaController {
                 provaRepository.buscarProvaInteira(id)
         );
     }
+
+    @GET
+    @Path("/buscarRID")
+    @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
+    @Operation(summary = "Obter conteúdo por quantidade de provas", description = "Faz uma busca paginada dos conteúdos ordenados por quantidade de provas")
+    @Transactional
+    public Response buscarProvaRespondidaPorId(@QueryParam("id") Long id) {
+        return api.retornar(
+                provaRespondidaRepository.buscarProvaRespondidaInteira(id)
+        );
+    }
+
+    @POST
+    @Path("/realizar")
+    @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
+    @Operation(summary = "Realizar uma prova", description = "salva as respostas que um usuário deu a uma prova")
+    @Transactional
+    public Response realizarProva(RealizarProvaDto dto) {
+        return api.retornar(
+                () -> {
+                    provaRespondidaRepository.realizarProva(dto, "a");
+                    return RespostaAPI.sucesso("Prova realizada com sucesso!");
+                },dto);
+    }
+
+    @GET
+    @Path("/corrigirME")
+    @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
+    @Operation(summary = "Corrigir uma prova", description = "Corrige automaticamente as questões de multipla escolha de uma prova")
+    @Transactional
+    public Response corrigirQuestoesMultiplaEscolha(@QueryParam("id") Long id) {
+        return api.executar(
+                () -> {
+                    provaRespondidaRepository.corrigirQuestoesMultiplaEscolha(id);
+                    return RespostaAPI.sucesso("Prova corrigida com sucesso!");
+                });
+    }
+
+    @PUT
+    @Path("/corrigirD")
+    @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
+    @Operation(summary = "Corrigir uma prova", description = "Corrige automaticamente as questões de multipla escolha de uma prova")
+    @Transactional
+    public Response corrigirQuestoesDissertativas(CorrigirQuestoesDissertativasDto dto) {
+        return api.executar(
+                () -> {
+                    provaRespondidaRepository.corrigirQuestoesDissertativas(dto);
+                    return RespostaAPI.sucesso("Prova corrigida com sucesso!");
+                });
+    }
+
 }

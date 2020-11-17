@@ -11,6 +11,9 @@ public class Prova extends ObjetoDeDominio{
     private String nome;
 
     @Column
+    private BigDecimal tempo;
+
+    @Column
     private Long dificuldade;
 
     @Column
@@ -34,6 +37,7 @@ public class Prova extends ObjetoDeDominio{
         prova.setQuestoes(questoes);
         prova.setUsuario(usuario);
         prova.setPublica(publica);
+        prova.setRealizacoes(0L);
         return prova;
     }
 

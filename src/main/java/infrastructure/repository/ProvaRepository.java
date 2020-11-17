@@ -1,10 +1,8 @@
 package infrastructure.repository;
 import domain.Prova;
+import domain.ProvaRespondida;
 import domain.Questao;
-import infrastructure.dto.BuscaPaginadaDto;
-import infrastructure.dto.BuscarProvasDto;
-import infrastructure.dto.ProvaDto;
-import infrastructure.dto.QuestaoDto;
+import infrastructure.dto.*;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
@@ -32,15 +30,19 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
     }
 
     public ProvaDto buscarProvaInteira(Long id) {
-        Prova prova = findById(id);
-        if (prova == null) throw new WebApplicationException("Prova não encontrada",Response.Status.NOT_FOUND);
-        ProvaDto provaDto = ProvaDto.instanciar(prova);
-        List<QuestaoDto> questoes = new ArrayList<>();
-        for(Questao questao : prova.getQuestoes()){
-            questoes.add(QuestaoDto.instanciar(questao));
+        try {
+            Prova prova = findById(id);
+            if (prova == null) throw new WebApplicationException("Prova não encontrada", Response.Status.NOT_FOUND);
+            ProvaDto provaDto = ProvaDto.instanciar(prova);
+            List<QuestaoDto> questoes = new ArrayList<>();
+            for (Questao questao : prova.getQuestoes()) {
+                questoes.add(QuestaoDto.instanciar(questao));
+            }
+            provaDto.setQuestoes(questoes);
+            return provaDto;
+        } catch (WebApplicationException e) {
+            throw new WebApplicationException(e.getMessage(), e.getResponse());
         }
-        provaDto.setQuestoes(questoes);
-        return provaDto;
     }
 
     public void cadastrarProva(Prova prova){
@@ -97,5 +99,6 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
             throw new WebApplicationException(e.getMessage(), e.getResponse());
         }
     }
+
 
 }
