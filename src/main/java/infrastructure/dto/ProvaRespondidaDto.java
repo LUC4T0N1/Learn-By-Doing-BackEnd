@@ -1,5 +1,4 @@
 package infrastructure.dto;
-import domain.Prova;
 import domain.ProvaRespondida;
 import domain.QuestaoRespondida;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -11,7 +10,7 @@ import java.util.List;
         name = "Provas",
         description = "JSON com informações sobre uma prova realizada")
 
-public class RealizarProvaDto {
+public class ProvaRespondidaDto {
     public String nomeAluno;
     public String emailAluno;
     public Long idProva;
@@ -22,17 +21,19 @@ public class RealizarProvaDto {
     public BigDecimal notaAluno;
     public Boolean totalmenteCorrigida;
     public List<QuestaoRespondidaDto> questoesRespondidasDto;
+    public int resolucoes;
 
-    protected RealizarProvaDto(){}
+    protected ProvaRespondidaDto(){}
 
-    public static RealizarProvaDto instanciar(ProvaRespondida provaRespondida){
-        RealizarProvaDto realizarProvaDto = new RealizarProvaDto();
+    public static ProvaRespondidaDto instanciar(ProvaRespondida provaRespondida){
+        ProvaRespondidaDto realizarProvaDto = new ProvaRespondidaDto();
         realizarProvaDto.setEmailAluno(provaRespondida.getEmailAluno());
         realizarProvaDto.setNomeAluno(provaRespondida.getNomeAluno());
         realizarProvaDto.setNotaAluno(provaRespondida.getNotaAluno());
         realizarProvaDto.setNotaMaxima(provaRespondida.getProva().getNotaMaxima());
         realizarProvaDto.setQuestoesCorrigidas(provaRespondida.getQuestoesCorrigidas());
         realizarProvaDto.setTotalQuestoes(provaRespondida.getProva().getQuestoes().size());
+        realizarProvaDto.setResolucoes(provaRespondida.getResolucoes());
         realizarProvaDto.setTotalmenteCorrigida(provaRespondida.getCorrigida());
         List<QuestaoRespondidaDto> questoesRespondidasDto = new ArrayList<>();
         System.out.println(provaRespondida.getQuestoesRespondidas().size());
@@ -73,6 +74,10 @@ public class RealizarProvaDto {
 
     public Long getIdProva() {
         return idProva;
+    }
+
+    public void setResolucoes(int resolucoes) {
+        this.resolucoes = resolucoes;
     }
 
     public void setIdProva(Long idProva) {

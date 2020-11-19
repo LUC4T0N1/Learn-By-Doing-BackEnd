@@ -4,7 +4,7 @@ import domain.Questao;
 import infrastructure.dto.CorrigirQuestoesDissertativasDto;
 import infrastructure.dto.ProvaDto;
 import infrastructure.dto.BuscarProvasDto;
-import infrastructure.dto.RealizarProvaDto;
+import infrastructure.dto.ProvaRespondidaDto;
 import infrastructure.repository.ProvaRepository;
 import infrastructure.repository.ProvaRespondidaRepository;
 import infrastructure.repository.QuestaoRepository;
@@ -100,7 +100,7 @@ public class ProvaController {
     @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
     @Operation(summary = "Realizar uma prova", description = "salva as respostas que um usuário deu a uma prova")
     @Transactional
-    public Response realizarProva(RealizarProvaDto dto) {
+    public Response realizarProva(ProvaRespondidaDto dto) {
         return api.retornar(
                 () -> {
                     provaRespondidaRepository.realizarProva(dto, "usuario2");

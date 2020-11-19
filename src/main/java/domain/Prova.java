@@ -33,6 +33,9 @@ public class Prova extends ObjetoDeDominio{
     private Long realizacoes;
 
     @Column
+    private Long tentativas;
+
+    @Column
     private Boolean publica;
 
     @ManyToMany
@@ -51,6 +54,7 @@ public class Prova extends ObjetoDeDominio{
         prova.setUsuario(usuario);
         prova.setPublica(publica);
         prova.setRealizacoes(0L);
+        prova.setTentativas(dto.tentativas);
         prova.setMediaNotas(new BigDecimal(0));
         prova.setQuantidadeQuestoes(questoes.size());
         prova.setTempo(dto.tempo);
@@ -83,6 +87,14 @@ public class Prova extends ObjetoDeDominio{
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Long getTentativas() {
+        return tentativas;
+    }
+
+    public void setTentativas(Long tentativas) {
+        this.tentativas = tentativas;
     }
 
     public List<Questao> getQuestoes() {

@@ -23,6 +23,7 @@ public class ProvaDto {
     public BigDecimal tempo;
     public String dataInicial;
     public String dataFinal;
+    public Long tentativas;
 
     public Prova paraDominio(ProvaDto dto, List<Questao> questoes, String usuario, Boolean publica){
         return Prova.instanciar(dto, questoes, usuario, publica);

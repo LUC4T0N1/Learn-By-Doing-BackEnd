@@ -1,6 +1,6 @@
 package domain;
 
-import infrastructure.dto.RealizarProvaDto;
+import infrastructure.dto.ProvaRespondidaDto;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -17,6 +17,9 @@ public class ProvaRespondida extends ObjetoDeDominio{
     @Column
     private Boolean corrigida;
 
+    @Column
+    public int resolucoes;
+
     @Column(name = "nome_aluno")
     private String nomeAluno;
 
@@ -32,7 +35,7 @@ public class ProvaRespondida extends ObjetoDeDominio{
 
     protected ProvaRespondida(){}
 
-    public static ProvaRespondida instanciar(RealizarProvaDto dto, Prova prova, String usuario){
+    public static ProvaRespondida instanciar(ProvaRespondidaDto dto, Prova prova, String usuario){
         ProvaRespondida provaRespondida = new ProvaRespondida();
         provaRespondida.setEmailAluno(dto.emailAluno);
         provaRespondida.setNomeAluno(dto.nomeAluno);
@@ -94,6 +97,14 @@ public class ProvaRespondida extends ObjetoDeDominio{
 
     public Boolean getCorrigida() {
         return corrigida;
+    }
+
+    public int getResolucoes() {
+        return resolucoes;
+    }
+
+    public void setResolucoes(int resolucoes) {
+        this.resolucoes = resolucoes;
     }
 
     public void setCorrigida(Boolean corrigida) {

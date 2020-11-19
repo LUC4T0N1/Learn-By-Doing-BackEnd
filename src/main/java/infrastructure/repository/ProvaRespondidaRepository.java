@@ -3,15 +3,12 @@ package infrastructure.repository;
 import application.utlis.DataUtils;
 import domain.Prova;
 import domain.ProvaRespondida;
-import domain.Questao;
 import domain.QuestaoRespondida;
 import infrastructure.dto.*;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import org.apache.commons.lang3.time.DateUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -27,9 +24,10 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
     @Inject QuestaoRespondidaRepository questaoRespondidaRepository;
 
     @Transactional
-    public void realizarProva(RealizarProvaDto dto, String usuario) {
+    public void realizarProva(ProvaRespondidaDto dto, String usuario) {
         try {
             Prova prova = provaRepository.buscarPorId(dto.idProva);
+            this.verificaResolucoes(dto.idProva, usuario, prova);
             this.verificarDatas(prova);
             List<QuestaoRespondida> questoesRespondidas = new ArrayList<>();
             for (QuestaoRespondidaDto questaoRespondidaDto : dto.questoesRespondidasDto) {
@@ -42,6 +40,10 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
             provaRespondida.setQuestoesRespondidas(questoesRespondidas);
             for (QuestaoRespondida questaoRespondida : questoesRespondidas) {
                 questaoRespondida.setProvaRespondida(provaRespondida);
+            }
+            List<ProvaRespondida> provasRespondidas = find("usuario = ?1 AND prova_id = ?2 ", usuario, dto.idProva).list();
+            for(ProvaRespondida provaRespondida1 : provasRespondidas){
+                provaRespondida1.setResolucoes(provasRespondidas.size());
             }
         } catch (Exception e) {
             throw new Error(e);
@@ -67,11 +69,24 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
         }
     }
 
-    public RealizarProvaDto buscarProvaRespondidaInteira(Long id) {
+    public void verificaResolucoes(Long id, String usuario, Prova prova){
+        try {
+            if (prova.getTentativas() != null) {
+                ProvaRespondida provaRespondida = find("usuario = ?1 AND prova_id = ?2 ", usuario, id).firstResult();
+                if (provaRespondida != null && provaRespondida.getResolucoes() == prova.getTentativas()) {
+                    throw new WebApplicationException("Você já atingiu o limite de tentativas pemritidas para essa prova!", Response.Status.FORBIDDEN);
+                }
+            }
+        }catch (WebApplicationException e) {
+            throw new WebApplicationException(e.getMessage(), e.getResponse());
+        }
+    }
+
+    public ProvaRespondidaDto buscarProvaRespondidaInteira(Long id) {
         try {
             ProvaRespondida provaRespondida = findById(id);
             if (provaRespondida == null) throw new WebApplicationException("Prova não encontrada", Response.Status.NOT_FOUND);
-            RealizarProvaDto provaDto = RealizarProvaDto.instanciar(provaRespondida);
+            ProvaRespondidaDto provaDto = ProvaRespondidaDto.instanciar(provaRespondida);
             provaDto.setProvaDto(provaRepository.buscarProvaInteira(provaRespondida.getProva().getId()));
             return provaDto;
         } catch (WebApplicationException e) {
