@@ -1,7 +1,7 @@
 package interfaces.controller;
 
-import infrastructure.dto.ConteudoDto;
-import infrastructure.repository.ConteudoRepository;
+import infraestrutura.dto.ConteudoDto;
+import infraestrutura.repository.ConteudoRepository;
 import interfaces.controller.resposta.RespostaAPI;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -26,7 +26,7 @@ public class ConteudoController {
     RespostaAPI api;
     //@Inject
     //@Claim("usuario")
-    String usuario = "usuario";
+    String usuario = "usuario2";
 
     @POST
     @Transactional
@@ -35,7 +35,7 @@ public class ConteudoController {
     public Response cadastrarConteudo(ConteudoDto dto) {
         return api.retornar(
                 () -> {
-                    conteudoRepository.cadastrarConteudo(dto.paraDominio(dto.nome, 0L, usuario));
+                    conteudoRepository.cadastrarConteudo(dto, usuario);
                     return RespostaAPI.sucesso("Conteúdo cadastrado com sucesso!");
                 },dto);
     }
@@ -50,6 +50,19 @@ public class ConteudoController {
                 () -> {
                     conteudoRepository.cadastrarProva(dto);
                     return RespostaAPI.sucesso("Prova adicionada ao coneúdo com sucesso!");
+                },dto);
+    }
+
+    @DELETE
+    @Path("/removerProva")
+    @Tag(name = "Conteúdo", description = "Controllers de Conteúdo")
+    @Operation(summary = "Salva prova", description = "Salva uma prova em um conteúdo")
+    @Transactional
+    public Response removerProvaConteudo(ConteudoDto dto) {
+        return api.retornar(
+                () -> {
+                    conteudoRepository.removerProva(dto, usuario);
+                    return RespostaAPI.sucesso("Prova removida do coneúdo com sucesso!");
                 },dto);
     }
 

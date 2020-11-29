@@ -1,10 +1,10 @@
 package interfaces.controller;
 
-import domain.Alternativa;
-import infrastructure.dto.AlternativaDto;
-import infrastructure.dto.QuestaoDto;
-import infrastructure.repository.AlternativaRepository;
-import infrastructure.repository.QuestaoRepository;
+import dominio.Alternativa;
+import infraestrutura.dto.AlternativaDto;
+import infraestrutura.dto.QuestaoDto;
+import infraestrutura.repository.AlternativaRepository;
+import infraestrutura.repository.QuestaoRepository;
 import interfaces.controller.resposta.RespostaAPI;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;

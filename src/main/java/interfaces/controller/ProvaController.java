@@ -1,13 +1,13 @@
 package interfaces.controller;
 
-import domain.Questao;
-import infrastructure.dto.CorrigirQuestoesDissertativasDto;
-import infrastructure.dto.ProvaDto;
-import infrastructure.dto.BuscarProvasDto;
-import infrastructure.dto.ProvaRespondidaDto;
-import infrastructure.repository.ProvaRepository;
-import infrastructure.repository.ProvaRespondidaRepository;
-import infrastructure.repository.QuestaoRepository;
+import dominio.Questao;
+import infraestrutura.dto.CorrigirQuestoesDissertativasDto;
+import infraestrutura.dto.ProvaDto;
+import infraestrutura.dto.BuscarProvasDto;
+import infraestrutura.dto.ProvaRespondidaDto;
+import infraestrutura.repository.ProvaRepository;
+import infraestrutura.repository.ProvaRespondidaRepository;
+import infraestrutura.repository.QuestaoRepository;
 import interfaces.controller.resposta.RespostaAPI;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -50,6 +50,20 @@ public class ProvaController {
                     return RespostaAPI.sucesso("Prova cadastrada com sucesso!");
                 },dto);
     }
+    @PUT
+    @Path("alterar")
+    @Transactional
+    @Tag(name = "Prova", description = "Controllers de Prova")
+    @Operation(summary = "Alterar prova", description = "Altera dados de uma prova já cadastrada")
+    public Response alterarProva(ProvaDto dto) {
+        return api.retornar(
+                () -> {
+                    provaRepository.alterarProva(dto, usuario);
+                    return RespostaAPI.sucesso("Prova alterada com sucesso!");
+                },dto);
+    }
+
+
 
     @GET
     @Path("/buscarPU")
