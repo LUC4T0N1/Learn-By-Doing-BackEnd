@@ -1,6 +1,7 @@
 package infraestrutura.dto;
 import dominio.ProvaRespondida;
 import dominio.QuestaoRespondida;
+import io.quarkus.logging.Log;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 public class ProvaRespondidaDto {
     public String nomeAluno;
     public String emailAluno;
-    public Long idProva;
+    public Long id;
     public ProvaDto provaDto;
     public BigDecimal notaMaxima;
     public int questoesCorrigidas;
@@ -27,20 +28,16 @@ public class ProvaRespondidaDto {
 
     public static ProvaRespondidaDto instanciar(ProvaRespondida provaRespondida){
         ProvaRespondidaDto realizarProvaDto = new ProvaRespondidaDto();
+        realizarProvaDto.setId(provaRespondida.getId());
         realizarProvaDto.setEmailAluno(provaRespondida.getEmailAluno());
         realizarProvaDto.setNomeAluno(provaRespondida.getNomeAluno());
         realizarProvaDto.setNotaAluno(provaRespondida.getNotaAluno());
         realizarProvaDto.setNotaMaxima(provaRespondida.getProva().getNotaMaxima());
+        Log.info("Aqui: "+ provaRespondida.getProva().getNotaMaxima());
         realizarProvaDto.setQuestoesCorrigidas(provaRespondida.getQuestoesCorrigidas());
         realizarProvaDto.setTotalQuestoes(provaRespondida.getProva().getQuestoes().size());
         realizarProvaDto.setResolucoes(provaRespondida.getResolucoes());
         realizarProvaDto.setTotalmenteCorrigida(provaRespondida.getCorrigida());
-        List<QuestaoRespondidaDto> questoesRespondidasDto = new ArrayList<>();
-        System.out.println(provaRespondida.getQuestoesRespondidas().size());
-        for(QuestaoRespondida questaoRespondida : provaRespondida.getQuestoesRespondidas()){
-            questoesRespondidasDto.add(QuestaoRespondidaDto.instanciar(questaoRespondida));
-        }
-        realizarProvaDto.setQuestoesRespondidasDto(questoesRespondidasDto);
         return realizarProvaDto;
     }
 
@@ -72,20 +69,16 @@ public class ProvaRespondidaDto {
         this.emailAluno = emailAluno;
     }
 
-    public Long getIdProva() {
-        return idProva;
+    public Long getId() {
+        return id;
     }
 
     public void setResolucoes(int resolucoes) {
         this.resolucoes = resolucoes;
     }
 
-    public void setIdProva(Long idProva) {
-        this.idProva = idProva;
-    }
-
-    public ProvaDto getProvaDto() {
-        return provaDto;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setProvaDto(ProvaDto provaDto) {
@@ -100,15 +93,25 @@ public class ProvaRespondidaDto {
         this.notaAluno = notaAluno;
     }
 
-    public List<QuestaoRespondidaDto> getQuestoesRespondidasDto() {
-        return questoesRespondidasDto;
-    }
-
-    public void setQuestoesRespondidasDto(List<QuestaoRespondidaDto> questoesRespondidasDto) {
-        this.questoesRespondidasDto = questoesRespondidasDto;
-    }
 
     public void setTotalmenteCorrigida(Boolean totalmenteCorrigida) {
         this.totalmenteCorrigida = totalmenteCorrigida;
+    }
+
+    @Override
+    public String toString() {
+        return "ProvaRespondidaDto{" +
+                "nomeAluno='" + nomeAluno + '\'' +
+                ", emailAluno='" + emailAluno + '\'' +
+                ", id=" + id +
+                ", provaDto=" + provaDto +
+                ", notaMaxima=" + notaMaxima +
+                ", questoesCorrigidas=" + questoesCorrigidas +
+                ", totalQuestoes=" + totalQuestoes +
+                ", notaAluno=" + notaAluno +
+                ", totalmenteCorrigida=" + totalmenteCorrigida +
+                ", questoesRespondidasDto=" + questoesRespondidasDto +
+                ", resolucoes=" + resolucoes +
+                '}';
     }
 }

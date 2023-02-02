@@ -1,25 +1,25 @@
 package interfaces.controller;
 
-import dominio.Alternativa;
-import infraestrutura.dto.AlternativaDto;
+import aplicacao.service.QuestaoService;
+
+import infraestrutura.dto.FiltrarQuestoesDto;
 import infraestrutura.dto.QuestaoDto;
-import infraestrutura.repository.AlternativaRepository;
-import infraestrutura.repository.QuestaoRepository;
+
 import interfaces.controller.resposta.RespostaAPI;
+import io.quarkus.logging.Log;
+import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
+
 
 @RequestScoped
 @Path("api/questao")
@@ -28,30 +28,63 @@ import java.util.List;
 public class QuestaoController {
 
     @Inject
-    AlternativaRepository alternativaRepository;
-    @Inject
-    QuestaoRepository questaoRepository;
+    QuestaoService questaoService;
+
     @Inject
     RespostaAPI api;
 
-    //@Inject
-    //@Claim("usuario")
-    String usuario = "usuario";
+    @Inject
+    @Claim("usuario")
+    String usuario;
+
+    private final String divisao = "--------------------------------------------------------------NOVA CHAMADA----------------------------------------------------------------------";
+
 
     @POST
     @Transactional
     @Tag(name = "Questão", description = "Controllers de Questão")
     @Operation(summary = "Cadastra uma nova Questão", description = "Cadastra uma novva questão")
     public Response cadastrarQuestao(QuestaoDto dto) {
+        Log.info(divisao + "\n Cadastrando nova questao: "+ dto.toString());
         return api.retornar(
                 () -> {
-                    List<Alternativa> alternativas = new ArrayList<>();
-                    for (AlternativaDto alternativaDto : dto.alternativas) {
-                        alternativas.add(Alternativa.instanciar(alternativaDto, usuario));
-                    }
-                    alternativas = alternativaRepository.cadastrarAlternativas(alternativas);
-                    questaoRepository.cadastrarQuestao(dto.paraDominio(dto, alternativas, usuario));
-                    return RespostaAPI.sucesso("Questão cadastrada com sucesso!");
-                }, dto);
+                    return api.retornar(questaoService.cadastrarNovaQuestao(dto, usuario));
+                },dto);
+    }
+
+    @PUT
+    @Transactional
+    @Tag(name = "Questão", description = "Controllers de Questão")
+    @Operation(summary = "Alterar uma nova Questão", description = "Cadastra uma novva questão")
+    public Response editarQuestao(QuestaoDto dto) {
+        Log.info(divisao + "\n Editando questao: "+ dto.toString());
+        return api.retornar(
+                () -> {
+                    return api.retornar(questaoService.editarQuestao(dto, usuario));
+                },dto);
+    }
+
+    @GET
+    @Path("/filtrar")
+    @Transactional
+    @Tag(name = "Questão", description = "Controllers de Questão")
+    @Operation(summary = "Cadastra uma nova Questão", description = "Cadastra uma nova questão")
+    public Response filtrarQuestoes(
+            @QueryParam("enunciado") String enunciado,
+            @QueryParam("pagina") Integer pagina,
+            @QueryParam("ordenacao") Integer ordenacao,
+            @QueryParam("ordem") Integer ordem,
+            @QueryParam("multiplaEscolha") Integer multiplaEscolha,
+            @QueryParam("publica") Boolean publica,
+            @QueryParam("conteudos")  List<Integer> conteudos,
+            @QueryParam("questoes")  List<Long> idsQuestoes
+
+    ) {
+        System.out.println(divisao+ "\n Iniciando Busca de Questões -> enunciado: " + enunciado +
+                " pagina: " + pagina + " ordenacao: " + ordenacao + " ordem: " + ordem
+                + " multiplaEscolha: " + multiplaEscolha + " publica: " + publica + " conteudos: " + conteudos + " Questoes: " + idsQuestoes);
+        return api.retornar(
+                questaoService.filtrarQuestoes(pagina, enunciado, ordenacao, ordem, conteudos, multiplaEscolha, publica, idsQuestoes)
+        );
     }
 }

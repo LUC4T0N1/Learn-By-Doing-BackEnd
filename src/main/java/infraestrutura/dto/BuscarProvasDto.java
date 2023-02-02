@@ -5,4 +5,6 @@ public class BuscarProvasDto {
     public Boolean ordemAlfabetica;
     public Boolean dificuldade;
     public Boolean popularidade;
+
+    protected BuscarProvasDto(){};
 }

@@ -15,8 +15,6 @@ public class Questao extends ObjetoDeDominio{
     @Column(name = "resposta_correta")
     private String respostaCorreta;
 
-    @Column
-    private BigDecimal valor;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "questao")
     private List<Alternativa> alternativas;
@@ -26,6 +24,9 @@ public class Questao extends ObjetoDeDominio{
 
     @Column
     private boolean publica;
+
+    @ManyToMany(mappedBy = "questoes")
+    private List<Conteudo> conteudos;
 
 
     public static Questao instanciarPorId(Long id){
@@ -40,10 +41,19 @@ public class Questao extends ObjetoDeDominio{
         questao.setEnunciado(dto.enunciado);
         questao.setMultipaEscolha(dto.multiplaEscolha);
         questao.setAlternativas(alternativas);
-        questao.setValor(dto.valor);
         questao.setRespostaCorreta(dto.resposta);
         questao.setUsuario(usuario);
+        questao.setPublica(dto.publica);
         return questao;
+    }
+
+
+    public List<Conteudo> getConteudos() {
+        return conteudos;
+    }
+
+    public void setConteudos(List<Conteudo> conteudos) {
+        this.conteudos = conteudos;
     }
 
     public boolean isPublica() {
@@ -62,13 +72,6 @@ public class Questao extends ObjetoDeDominio{
         this.enunciado = enunciado;
     }
 
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
 
     public List<Alternativa> getAlternativas() {
         return alternativas;
@@ -92,5 +95,17 @@ public class Questao extends ObjetoDeDominio{
 
     public void setRespostaCorreta(String respostaCorreta) {
         this.respostaCorreta = respostaCorreta;
+    }
+
+    @Override
+    public String toString() {
+        return "Questao{" +
+                "enunciado='" + enunciado + '\'' +
+                ", respostaCorreta='" + respostaCorreta + '\'' +
+                ", alternativas=" + alternativas +
+                ", multipaEscolha=" + multipaEscolha +
+                ", publica=" + publica +
+                ", conteudos=" + conteudos +
+                '}';
     }
 }

@@ -35,10 +35,10 @@ public class ProvaRespondida extends ObjetoDeDominio{
 
     protected ProvaRespondida(){}
 
-    public static ProvaRespondida instanciar(ProvaRespondidaDto dto, Prova prova, String usuario){
+    public static ProvaRespondida instanciar(Prova prova, String usuario, Usuario usuarioObj){
         ProvaRespondida provaRespondida = new ProvaRespondida();
-        provaRespondida.setEmailAluno(dto.emailAluno);
-        provaRespondida.setNomeAluno(dto.nomeAluno);
+        provaRespondida.setEmailAluno(usuarioObj.getEmail());
+        provaRespondida.setNomeAluno(usuarioObj.getNome());
         provaRespondida.setProva(prova);
         provaRespondida.setUsuario(usuario);
         provaRespondida.setNotaAluno(new BigDecimal(0));

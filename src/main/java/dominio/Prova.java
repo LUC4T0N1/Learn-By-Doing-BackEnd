@@ -14,6 +14,9 @@ public class Prova extends ObjetoDeDominio{
     @Column
     private String nome;
 
+    @Column(name = "id_secreto")
+    private String idSecreto;
+
     @Column
     private BigDecimal tempo;
 
@@ -21,10 +24,10 @@ public class Prova extends ObjetoDeDominio{
     private int quantidadeQuestoes;
 
     @Column(name = "data_inicial")
-    private Date dataInicial;
+    private String dataInicial;
 
     @Column(name = "data_final")
-    private Date dataFinal;
+    private String dataFinal;
 
     @Column(name = "media_notas")
     private BigDecimal mediaNotas;
@@ -43,26 +46,40 @@ public class Prova extends ObjetoDeDominio{
             name = "prova_questao")
     private List<Questao> questoes;
 
+    @ManyToMany(mappedBy = "provas")
+    private List<Conteudo> conteudos;
+
+
     @Column(name = "nota_maxima")
     private BigDecimal notaMaxima;
 
-    public static Prova instanciar(ProvaDto dto, List<Questao> questoes, String usuario, Boolean publica){
+    public static Prova instanciar(ProvaDto dto, List<Questao> questoes, String usuario, String idSecreto){
         Prova prova = new Prova();
         prova.setNome(dto.nome);
-        prova.setNotaMaxima(dto.notaMaxima);
+        BigDecimal notaMax = new BigDecimal(0);
+        prova.setNotaMaxima(notaMax);
+        prova.setIdSecreto(idSecreto);
         prova.setQuestoes(questoes);
         prova.setUsuario(usuario);
-        prova.setPublica(publica);
+        prova.setPublica(dto.publica);
         prova.setRealizacoes(0L);
         prova.setTentativas(dto.tentativas);
         prova.setMediaNotas(new BigDecimal(0));
         prova.setQuantidadeQuestoes(questoes.size());
         prova.setTempo(dto.tempo);
         if(dto.dataInicial!= null && dto.dataFinal!= null){
-            prova.setDataInicial(DataUtils.converterParaDate(dto.dataInicial));
-            prova.setDataFinal(DataUtils.converterParaDate(dto.dataFinal));
+            prova.setDataInicial(dto.dataInicial);
+            prova.setDataFinal(dto.dataFinal);
         }
         return prova;
+    }
+
+    public List<Conteudo> getConteudos() {
+        return conteudos;
+    }
+
+    public void setConteudos(List<Conteudo> conteudos) {
+        this.conteudos = conteudos;
     }
 
     public Boolean getPublica() {
@@ -113,8 +130,13 @@ public class Prova extends ObjetoDeDominio{
         this.notaMaxima = notaMaxima;
     }
 
+    public String getIdSecreto() {
+        return idSecreto;
+    }
 
-
+    public void setIdSecreto(String idSecreto) {
+        this.idSecreto = idSecreto;
+    }
 
     public Long getRealizacoes() {
         return realizacoes;
@@ -140,19 +162,19 @@ public class Prova extends ObjetoDeDominio{
         this.quantidadeQuestoes = quantidadeQuestoes;
     }
 
-    public Date getDataInicial() {
+    public String getDataInicial() {
         return dataInicial;
     }
 
-    public void setDataInicial(Date dataInicial) {
+    public void setDataInicial(String dataInicial) {
         this.dataInicial = dataInicial;
     }
 
-    public Date getDataFinal() {
+    public String getDataFinal() {
         return dataFinal;
     }
 
-    public void setDataFinal(Date dataFinal) {
+    public void setDataFinal(String dataFinal) {
         this.dataFinal = dataFinal;
     }
 }

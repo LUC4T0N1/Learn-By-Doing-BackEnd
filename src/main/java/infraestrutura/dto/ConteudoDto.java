@@ -15,12 +15,25 @@ public class ConteudoDto {
     protected ConteudoDto(){}
 
 
-    public static ConteudoDto instanciar(Conteudo conteudo){
+    public static ConteudoDto instanciarPorEntidade(Conteudo conteudo){
         ConteudoDto conteudoDto = new ConteudoDto();
         conteudoDto.setNome(conteudo.getNome());
         conteudoDto.setIdConteudo(conteudo.getId());
         conteudoDto.setNumeroProvas(conteudo.getNumeroProvas());
         return conteudoDto;
+    }
+
+    public static ConteudoDto instanciar(String nome, Long idConteudo, Long idProva){
+        ConteudoDto conteudoDto = new ConteudoDto();
+        conteudoDto.setNome(nome);
+        conteudoDto.setIdConteudo(idConteudo);
+        conteudoDto.setIdProva(idProva);
+        return conteudoDto;
+    }
+
+
+    public void setIdProva(Long idProva) {
+        this.idProva = idProva;
     }
 
     public void setNome(String nome) {

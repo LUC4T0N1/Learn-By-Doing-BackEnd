@@ -1,6 +1,5 @@
 package interfaces.controller.resposta;
 
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -12,6 +11,7 @@ import javax.validation.Validator;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Schema(
         name = "Resposta",
@@ -95,6 +95,7 @@ public class RespostaAPI implements Serializable {
                     .build();
         }
     }
+
 
     private RespostaAPI(String mensagem, boolean sucesso) {
         this.mensagem = mensagem;

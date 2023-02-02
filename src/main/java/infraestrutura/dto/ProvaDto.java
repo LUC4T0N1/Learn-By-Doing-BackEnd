@@ -3,11 +3,14 @@ package infraestrutura.dto;
 import aplicacao.utlis.DataUtils;
 import dominio.Prova;
 import dominio.Questao;
+import dominio.QuestaoRespondida;
+import dominio.ValorQuestao;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Schema(
         name = "Provas",
@@ -27,28 +30,65 @@ public class ProvaDto {
     public String dataFinal;
     public Long tentativas;
     public int quantidadeQuestoes;
+    public List<Long> conteudos;
+    public String idSecreto;
 
-    public Prova paraDominio(ProvaDto dto, List<Questao> questoes, String usuario, Boolean publica){
-        return Prova.instanciar(dto, questoes, usuario, publica);
+    public Prova paraDominio(ProvaDto dto, List<Questao> questoes, String usuario, String idSecreto){
+        return Prova.instanciar(dto, questoes, usuario, idSecreto);
     }
 
-    public static ProvaDto instanciar(Prova prova){
+    public static ProvaDto instanciarPorEntidade(Prova prova, List<QuestaoRespondida> respostas, Boolean setResposta, List<ValorQuestao> valores, Boolean fazer){
         ProvaDto provaDto = new ProvaDto();
         provaDto.setNome(prova.getNome());
         provaDto.setId(prova.getId());
         provaDto.setMediaNotas(prova.getMediaNotas());
         provaDto.setPopularidade(prova.getRealizacoes());
-        provaDto.setDataFinal(DataUtils.converterParaString(prova.getDataFinal()));
-        provaDto.setDataInicial(DataUtils.converterParaString(prova.getDataInicial()));
+        provaDto.setDataFinal(prova.getDataFinal());
+        provaDto.setIdSecreto(prova.getIdSecreto());
+        provaDto.setDataInicial(prova.getDataInicial());
         provaDto.setQuantidadeQuestoes(prova.getQuantidadeQuestoes());
         provaDto.setPublica(prova.getPublica());
         provaDto.setTentativas(prova.getTentativas());
         provaDto.setNotaMaxima(prova.getNotaMaxima());
+        provaDto.setTempo(prova.getTempo());
         List<QuestaoDto> questaoDtos = new ArrayList<>();
-        for(Questao questao : prova.getQuestoes()){
-            questaoDtos.add(QuestaoDto.instanciar(questao));
+        if(!respostas.isEmpty()){
+            for (QuestaoRespondida questao : respostas) {
+                questaoDtos.add(QuestaoDto.instanciar(questao.getQuestao(),
+                        questao.getRespostaAluno(), questao.getComentarioProfessor(),questao.getNotaAluno()
+                        ,questao.getId(), setResposta, valores.stream().filter(v -> v.getQuestao().equals(questao.getQuestao().getId())).collect(Collectors.toList()).get(0).getValor(), fazer));
+            }
+        }
+        else{
+            for (Questao questao : prova.getQuestoes()) {
+                questaoDtos.add(QuestaoDto.instanciar(questao, "","", new BigDecimal(0), null, setResposta,
+                        valores.stream().filter(v -> v.getQuestao().equals(questao.getId())).collect(Collectors.toList()).get(0).getValor(), fazer));
+            }
         }
         provaDto.setQuestoes(questaoDtos);
+        return provaDto;
+    }
+
+    public static ProvaDto instanciarReduzido(Prova prova){
+        ProvaDto provaDto = new ProvaDto();
+        provaDto.setNome(prova.getNome());
+        provaDto.setId(prova.getId());
+        provaDto.setMediaNotas(prova.getMediaNotas());
+        provaDto.setPopularidade(prova.getRealizacoes());
+        provaDto.setIdSecreto(prova.getIdSecreto());
+        provaDto.setDataFinal(prova.getDataFinal());
+        provaDto.setDataInicial(prova.getDataInicial());
+        provaDto.setQuantidadeQuestoes(prova.getQuantidadeQuestoes());
+        provaDto.setPublica(prova.getPublica());
+        provaDto.setTentativas(prova.getTentativas());
+        provaDto.setNotaMaxima(prova.getNotaMaxima());
+        provaDto.setTempo(prova.getTempo());
+        return provaDto;
+    }
+
+    public static ProvaDto instanciar(String nome) {
+      ProvaDto provaDto = new ProvaDto();
+        provaDto.nome = nome;
         return provaDto;
     }
 
@@ -95,6 +135,14 @@ public class ProvaDto {
 
     public void setMediaNotas(BigDecimal mediaNotas) {
         this.mediaNotas = mediaNotas;
+    }
+
+    public String getIdSecreto() {
+        return idSecreto;
+    }
+
+    public void setIdSecreto(String idSecreto) {
+        this.idSecreto = idSecreto;
     }
 
     public Long getPopularidade() {

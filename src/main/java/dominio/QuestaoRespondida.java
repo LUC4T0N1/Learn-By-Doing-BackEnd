@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
+import java.util.Optional;
+
 @Entity(name = "questao_respondida")
 public class QuestaoRespondida extends ObjetoDeDominio{
     @ManyToOne
@@ -26,10 +28,11 @@ public class QuestaoRespondida extends ObjetoDeDominio{
 
     protected QuestaoRespondida(){}
 
-    public static QuestaoRespondida instanciar(QuestaoRespondidaDto dto){
+    public static QuestaoRespondida instanciar(QuestaoRespondidaDto dto, Questao questao, String usuario){
         QuestaoRespondida questaoRespondida = new QuestaoRespondida();
         questaoRespondida.setRespostaAluno(dto.respostaAluno);
-        questaoRespondida.setQuestao(Questao.instanciarPorId(dto.idQuestao));
+        questaoRespondida.setQuestao(questao);
+        questaoRespondida.setUsuario(usuario);
         return questaoRespondida;
     }
 
