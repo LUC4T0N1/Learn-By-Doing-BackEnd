@@ -1,6 +1,7 @@
 package aplicacao.service;
 
 import aplicacao.autenticacao.GerarTokenService;
+import dominio.TrocarSenhaDto;
 import dominio.Usuario;
 
 import infraestrutura.dto.AutenticacaoDto;
@@ -101,6 +102,24 @@ public class UsuarioService {
             System.out.println("[Logar Usuario] Validando senha...");
             if(!Objects.equals(Usuario.cryptografarSenha(senhaRecebida), senhaUsuario))
                 throw new WebApplicationException("Senha incorreta!", 401);
+        }catch (WebApplicationException e){
+            throw new WebApplicationException(e.getMessage(), e.getResponse().getStatus());
+        }
+    }
+
+    @Transactional
+    public void alterarSenha(TrocarSenhaDto dto, String usuario) {
+        try {
+            Usuario usu = usuarioRepository.buscarUsuario(usuario);
+            if(!Objects.equals(Usuario.cryptografarSenha(dto.senhaAtual), usu.getSenha()))
+                throw new WebApplicationException("Senha antiga incorreta!", 400);
+            else{
+                if(!Objects.equals(dto.senhaNova, dto.senhaNovaConfirmacao))
+                    throw new WebApplicationException("Senhas diferentes!", 400);
+                else{
+                    usu.setSenha(Usuario.cryptografarSenha(dto.senhaNova));
+                }
+            }
         }catch (WebApplicationException e){
             throw new WebApplicationException(e.getMessage(), e.getResponse().getStatus());
         }

@@ -113,7 +113,7 @@ public class ConteudoRepository implements PanacheRepository<Conteudo> {
             String tipoOrdenacao = (ordenacao == 1 ? "numero_provas" : "nome");
             if(ordem == 0){
                 if(!Objects.equals(nome, "null")) {
-                    conteudos = find("nome like ?1", Sort.by(tipoOrdenacao).ascending(), nome + "%")
+                    conteudos = find("nome like ?1", Sort.by(tipoOrdenacao).ascending(), "%"+ nome + "%")
                             .page(Page.of(pagina, TAMANHO_PAGINA))
                             .list();
                 }else{
@@ -123,7 +123,7 @@ public class ConteudoRepository implements PanacheRepository<Conteudo> {
                 }
             }else{
                 if(!Objects.equals(nome, "null")) {
-                    conteudos = find("nome like ?1", Sort.by(tipoOrdenacao).descending(), nome + "%")
+                    conteudos = find("nome like ?1", Sort.by(tipoOrdenacao).descending(), "%"+ nome + "%")
                             .page(Page.of(pagina, TAMANHO_PAGINA))
                             .list();
                 }else{

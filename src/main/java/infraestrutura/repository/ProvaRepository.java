@@ -120,10 +120,10 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
 
             if(ordem == 0){
                 if(!Objects.equals(nome, "null")) {
-                    provas = find(" nome like ?1 AND usuario = ?2", Sort.by(filtro).ascending(), nome + "%", usuario)
+                    provas = find(" nome like ?1 AND usuario = ?2", Sort.by(filtro).ascending(), "%"+ nome + "%", usuario)
                             .page(Page.of(pagina, TAMANHO_PAGINA))
                             .list();
-                    total = (long) find(" nome like ?1 AND usuario = ?2", Sort.by(filtro).ascending(), nome + "%", usuario)
+                    total = (long) find(" nome like ?1 AND usuario = ?2", Sort.by(filtro).ascending(), "%"+ nome + "%", usuario)
                             .list().size();
                 }else{
                     provas = find("usuario =  ?1", Sort.by(filtro).ascending(), usuario)
@@ -134,10 +134,10 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
                 }
             }else{
                 if(!Objects.equals(nome, "null")) {
-                    provas = find("nome like ?1 AND usuario = ?2", Sort.by(filtro).descending(), nome + "%", usuario)
+                    provas = find("nome like ?1 AND usuario = ?2", Sort.by(filtro).descending(), "%"+ nome + "%", usuario)
                             .page(Page.of(pagina, TAMANHO_PAGINA))
                             .list();
-                    total = (long) find("nome like ?1 AND usuario = ?2", Sort.by(filtro).descending(), nome + "%", usuario)
+                    total = (long) find("nome like ?1 AND usuario = ?2", Sort.by(filtro).descending(), "%"+ nome + "%", usuario)
                             .list().size();
                 }else{
                     provas = find("usuario =  ?1", Sort.by(filtro).descending(), usuario)
@@ -179,7 +179,7 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
             Long total = 0L;
             if(ordem == 0){
                 if(!Objects.equals(nome, "null")) {
-                    provas = find("publica = 1 AND nome like ?1 AND id IN ?2", Sort.by(filtro).ascending(), nome + "%", ids)
+                    provas = find("publica = 1 AND nome like ?1 AND id IN ?2", Sort.by(filtro).ascending(), "%"+ nome + "%", ids)
                             .page(Page.of(pagina, TAMANHO_PAGINA))
                             .list();
                 }else{
@@ -189,7 +189,7 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
                 }
             }else{
                 if(!Objects.equals(nome, "null")) {
-                    provas = find("publica = 1 AND nome like ?1 AND id IN ?2", Sort.by(filtro).descending(), nome + "%", ids)
+                    provas = find("publica = 1 AND nome like ?1 AND id IN ?2", Sort.by(filtro).descending(), "%"+ nome + "%", ids)
                             .page(Page.of(pagina, TAMANHO_PAGINA))
                             .list();
                 }else{

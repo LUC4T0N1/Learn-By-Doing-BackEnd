@@ -57,14 +57,14 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
                 pr.setResolucoes(provasRespondidas.size());
             }
             Log.info("Corrigindo questoes de multipla escolha..");
-            corrigirQuestoesMultiplaEscolha(provaRespondida);
+            corrigirQuestoesMultiplaEscolha(provaRespondida, prova);
         } catch (Exception e) {
             throw new WebApplicationException(e);
                     //WebApplicationException(e.getMessage(), e.getResponse());
         }
     }
 
-    public void corrigirQuestoesMultiplaEscolha(ProvaRespondida provaRespondida) {
+    public void corrigirQuestoesMultiplaEscolha(ProvaRespondida provaRespondida, Prova prova) {
         try {
             System.out.println("corrigindo");
             System.out.println("Quantidade questoes: "+ provaRespondida.getQuestoesRespondidas().size());
@@ -92,6 +92,7 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
                 }
             }
             provaRespondida.setQuestoesCorrigidas(questoes);
+            if(prova.getQuantidadeQuestoes()==questoes) provaRespondida.setCorrigida(true);
             provaRespondida.setNotaAluno(notaParcial);
             this.atualizarMediaNota(provaRespondida);
         } catch (WebApplicationException e) {
@@ -274,13 +275,15 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
             int questoes = 0;
             for(QuestoesDissertativasDto questaoDissertativa : dto.questoes) {
                 QuestaoRespondida questaoRespondida = provaRespondida.getQuestoesRespondidas().stream().filter(q -> q.getId().equals(questaoDissertativa.idQuestaoResolvida)).findFirst().get();
+                if(questaoRespondida.getNotaAluno()==null) questoes = questoes + 1;
                 questaoRespondida.setNotaAluno(questaoDissertativa.notaQuestao);
                 questaoRespondida.setComentarioProfessor(questaoDissertativa.comentarioProfessor);
                 notaParcial = notaParcial.add(questaoDissertativa.notaQuestao);
-                questoes = questoes + 1;
             }
             provaRespondida.setQuestoesCorrigidas(provaRespondida.getQuestoesCorrigidas() + questoes);
             atualizarNotaProva(provaRespondida);
+            System.out.println(provaRespondida.getProva().getQuantidadeQuestoes()+ " idd");
+            if(provaRespondida.getProva().getQuantidadeQuestoes() == provaRespondida.getQuestoesCorrigidas()) provaRespondida.setCorrigida(true);
             this.atualizarMediaNota(provaRespondida);
         } catch (Exception e) {
             throw new WebApplicationException(e);

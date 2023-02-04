@@ -2,6 +2,7 @@ package interfaces.controller;
 
 import aplicacao.service.QuestaoService;
 import aplicacao.service.UsuarioService;
+import dominio.TrocarSenhaDto;
 import dominio.Usuario;
 import infraestrutura.dto.FiltrarQuestoesDto;
 import infraestrutura.dto.QuestaoDto;
@@ -76,6 +77,20 @@ public class UsuarioController {
                 () -> {
                     System.out.println(divisao + "\n[Logar Usuario] logando usuario de email: " + dto.email );
                     return api.retornar(usuarioService.logarUsuario(dto));
+                });
+    }
+
+    @PUT
+    @Path("/trocarSenha")
+    @Tag(name = "Usuario", description = "Controllers de Usuario")
+    @Operation(summary = "Loga com a conta de um Usuario", description = "Logar usuario")
+    @PermitAll
+    public Response alterarSenha(TrocarSenhaDto dto) {
+        return api.executar(
+                () -> {
+                    System.out.println(divisao + "\n[Trocar Senha] Usuario trocando de senha... ");
+                    usuarioService.alterarSenha(dto, usuario);
+                    return api.retornar("Senha alterada com sucesso!");
                 });
     }
 
