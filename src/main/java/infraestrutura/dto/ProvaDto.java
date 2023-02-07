@@ -25,13 +25,15 @@ public class ProvaDto {
     public BigDecimal mediaNotas;
     public Long popularidade;
     public List<QuestaoDto> questoes;
-    public BigDecimal tempo;
+    public Long tempo;
     public String dataInicial;
     public String dataFinal;
     public Long tentativas;
     public int quantidadeQuestoes;
     public List<Long> conteudos;
     public String idSecreto;
+
+    public int realizacoes;
 
     public Prova paraDominio(ProvaDto dto, List<Questao> questoes, String usuario, String idSecreto){
         return Prova.instanciar(dto, questoes, usuario, idSecreto);
@@ -113,7 +115,7 @@ public class ProvaDto {
         this.publica = publica;
     }
 
-    public void setTempo(BigDecimal tempo) {
+    public void setTempo(Long tempo) {
         this.tempo = tempo;
     }
 

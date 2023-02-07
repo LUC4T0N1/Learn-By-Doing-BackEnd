@@ -6,7 +6,6 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
-import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -14,7 +13,13 @@ import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,6 +37,12 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
     public void realizarProva(ProvaRespondidaDto dto, String usuario) {
         try {
             Log.info("Buscando prova de id " + dto.id + "..");
+            List<ProvaRespondida> prAux = buscarProvaRespondidaInteira(dto.id, usuario);
+            if(prAux.size()>0){
+                for(ProvaRespondida prD : prAux){
+                    delete(prD);
+                }
+            }
             Prova prova = provaRepository.buscarPorId(dto.id);
             this.verificaResolucoes(dto.id, usuario, prova);
             this.verificarDatas(prova);
@@ -46,6 +57,7 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
             this.incrementaPopularidade(dto.id, usuario, prova);
             Log.info("Salvando prova resolvida..");
             persist(provaRespondida);
+            provaRespondida.setFinalizada(true);
             Log.info("Salvando questoes da prova resolvida..");
             provaRespondida.setQuestoesRespondidas(questoesRespondidas);
             for (QuestaoRespondida questaoRespondida : questoesRespondidas) {
@@ -66,23 +78,15 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
 
     public void corrigirQuestoesMultiplaEscolha(ProvaRespondida provaRespondida, Prova prova) {
         try {
-            System.out.println("corrigindo");
-            System.out.println("Quantidade questoes: "+ provaRespondida.getQuestoesRespondidas().size());
             BigDecimal notaParcial = new BigDecimal(0);
             int questoes = 0;
             List<ValorQuestao> valores = valorQuestaoRepository.buscarValores(provaRespondida.getProva().getId());
             for(QuestaoRespondida questaoRespondida : provaRespondida.getQuestoesRespondidas()){
-                System.out.println("é multipla escolha: "+ questaoRespondida.getQuestao().isMultipaEscolha());
-                System.out.println("id: "+ questaoRespondida.getQuestao().getId());
-                System.out.println("enunciado: "+ questaoRespondida.getQuestao().getEnunciado());
                 if(questaoRespondida.getQuestao().isMultipaEscolha()) {
-                    System.out.println("oi?");
                     questoes++;
                     if (!questaoRespondida.getRespostaAluno().equals(questaoRespondida.getQuestao().getRespostaCorreta())) {
                         questaoRespondida.setNotaAluno(new BigDecimal(0));
-                        System.out.println("errou");
                     } else {
-                        System.out.println("acertou");
                         BigDecimal valor = valores.stream().filter(v ->
                                 v.getQuestao().equals(questaoRespondida.getQuestao().getId()))
                                 .collect(Collectors.toList()).get(0).getValor();
@@ -92,9 +96,11 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
                 }
             }
             provaRespondida.setQuestoesCorrigidas(questoes);
-            if(prova.getQuantidadeQuestoes()==questoes) provaRespondida.setCorrigida(true);
             provaRespondida.setNotaAluno(notaParcial);
-            this.atualizarMediaNota(provaRespondida);
+            if(prova.getQuantidadeQuestoes()==questoes) {
+                provaRespondida.setCorrigida(true);
+                this.atualizarMediaNota(provaRespondida);
+            }
         } catch (WebApplicationException e) {
             throw new WebApplicationException(e.getMessage(), e.getResponse());
         }
@@ -123,24 +129,43 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
         try {
             Log.info("Verificando resoluções..");
             if (prova.getTentativas() != null) {
-                ProvaRespondida provaRespondida = find("usuario = ?1 AND prova_id = ?2 ", usuario, id).firstResult();
+                ProvaRespondida provaRespondida = find("usuario = ?1 AND prova_id = ?2 and finalizada =  true ", usuario, id).firstResult();
                 if (provaRespondida != null && provaRespondida.getResolucoes() == prova.getTentativas()) {
                     throw new WebApplicationException("Você já atingiu o limite de tentativas pemritidas para essa prova!", Response.Status.FORBIDDEN);
                 }
             }
         }catch (WebApplicationException e) {
+            System.out.println("deu ruim ou nao bucetaa");
             throw new WebApplicationException(e.getMessage(), e.getResponse());
         }
     }
 
 
-    public ProvaRespondidaDto buscarProvaRespondidaInteira(Long id) {
+    public ProvaRespondidaDto buscarResolucoesProvaRespondidaInteira(Long id) {
         try {
             ProvaRespondida provaRespondida = findById(id);
             if (provaRespondida == null) throw new WebApplicationException("Prova não encontrada", Response.Status.NOT_FOUND);
             ProvaRespondidaDto provaDto = ProvaRespondidaDto.instanciar(provaRespondida);
             provaDto.setProvaDto(provaRepository.buscarProvaInteira(provaRespondida.getProva().getId(), provaRespondida.getQuestoesRespondidas(), true));
             return provaDto;
+        } catch (WebApplicationException e) {
+            throw new WebApplicationException(e.getMessage(), e.getResponse());
+        }
+    }
+
+    public int buscarResolucoesProvaRespondidaInteira(Long idProva, String usuario) {
+        try {
+            ProvaRespondida provaRespondida = find("usuario = ?1 and prova_id = ?2", usuario, idProva).firstResult();
+            if (provaRespondida == null) return 0;
+            return provaRespondida.getResolucoes();
+        } catch (WebApplicationException e) {
+            throw new WebApplicationException(e.getMessage(), e.getResponse());
+        }
+    }
+
+    public List<ProvaRespondida> buscarProvaRespondidaInteira(Long idProva, String usuario) {
+        try {
+            return find("usuario = ?1 and prova_id = ?2 and finalizada = null", usuario, idProva).list();
         } catch (WebApplicationException e) {
             throw new WebApplicationException(e.getMessage(), e.getResponse());
         }
@@ -262,8 +287,36 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
 
 
     public void atualizarMediaNota(ProvaRespondida provaRespondida){
+        Log.info("Atualizando media notas..");
         Prova prova = provaRespondida.getProva();
+        Double notaMaxima = prova.getNotaMaxima().doubleValue();
+        Log.info("notaMaxima: " + notaMaxima);
+        Double provasCorrigidas = (double) provasCorrigidas(prova);
+        Log.info("provasCorrigidas: " + provasCorrigidas);
+        Double mediaAtual = prova.getMediaNotas().doubleValue();
+        Log.info("mediaAtual: " + mediaAtual);
+        Double notaAluno = provaRespondida.getNotaAluno().doubleValue();
+        Log.info("notaAluno: " + notaAluno);
+        Double mediaAluno = (notaAluno/notaMaxima)*100;
+        Log.info("mediaAluno: " + mediaAluno);
+        Double mediaNova;
+        if(!provaRespondida.getCorrigida()) {
+            Log.info("1 ");
+            mediaNova = ((mediaAtual * provasCorrigidas) + mediaAluno) / (provasCorrigidas+1);
+        }else{
+            Log.info("2 ");
+            Double notaAntiga = provaRespondida.getNotaAluno().doubleValue();
+            Log.info("notaAntiga: " + notaAntiga);
+            Double notaNova = obterNotaProva(provaRespondida).doubleValue();
+            Log.info("notaNova: " + notaNova);
+            mediaNova = ((((((mediaAtual/100)*notaMaxima)*provasCorrigidas)-notaAntiga)+notaNova)/(notaMaxima*provasCorrigidas))*100;
+        }
+        Log.info("mediaNova: " + mediaNova);
+        prova.setMediaNotas(new BigDecimal(mediaNova));
+    }
 
+    public int provasCorrigidas(Prova prova){
+        return find("prova_id = ?1 and corrigida = true", prova.getId()).list().size();
     }
 
 
@@ -281,10 +334,15 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
                 notaParcial = notaParcial.add(questaoDissertativa.notaQuestao);
             }
             provaRespondida.setQuestoesCorrigidas(provaRespondida.getQuestoesCorrigidas() + questoes);
-            atualizarNotaProva(provaRespondida);
-            System.out.println(provaRespondida.getProva().getQuantidadeQuestoes()+ " idd");
-            if(provaRespondida.getProva().getQuantidadeQuestoes() == provaRespondida.getQuestoesCorrigidas()) provaRespondida.setCorrigida(true);
-            this.atualizarMediaNota(provaRespondida);
+            if(!provaRespondida.getCorrigida()){
+                atualizarNotaProva(provaRespondida);
+                this.atualizarMediaNota(provaRespondida);
+                provaRespondida.setCorrigida(true);
+            }else{
+                this.atualizarMediaNota(provaRespondida);
+                atualizarNotaProva(provaRespondida);
+                provaRespondida.setCorrigida(true);
+            }
         } catch (Exception e) {
             throw new WebApplicationException(e);
         }
@@ -302,6 +360,18 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
         }
     }
 
+    public BigDecimal obterNotaProva(ProvaRespondida provaRespondida) {
+        try {
+            BigDecimal nota = new BigDecimal(0);
+            for(QuestaoRespondida qr : provaRespondida.getQuestoesRespondidas()){
+                nota = nota.add(qr.getNotaAluno());
+            }
+            return nota;
+        } catch (Exception e) {
+            throw new WebApplicationException(e);
+        }
+    }
+
     public Integer buscarProvasRealizadasPorUsuario(String usuario){
         try{
             return find("usuario = ?1", usuario).list().size();
@@ -309,6 +379,81 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
             return 0;
         }
     }
+
+    @Transactional
+    public TempoProvaDto iniciarProvaPrivada(Long id, String usuario){
+        try {
+            ProvaRespondida provaJaIniciada = find("finalizada = null AND usuario = ?1 AND prova_id = ?2", usuario, id).firstResult();
+            if(provaJaIniciada!=null){
+                Long tempoPassado = calcularTempoRestante(provaJaIniciada);
+                if(tempoPassado>=provaJaIniciada.getProva().getTempo()*60){
+                    return TempoProvaDto.instanciar(false, 0L);
+                }
+                else{
+                    return TempoProvaDto.instanciar(true, ((provaJaIniciada.getProva().getTempo()*60)-tempoPassado));
+                }
+            }else{
+                Prova prova = provaRepository.buscarPorId(id);
+                    Usuario usuarioObj =  usuarioRepository.buscarUsuario(usuario);
+                    ProvaRespondida provaRespondida = ProvaRespondida.instanciar(prova, usuario, usuarioObj);
+                    persist(provaRespondida);
+                    return TempoProvaDto.instanciar(true, prova.getTempo()*60);
+            }
+        }catch (WebApplicationException e){
+            throw new WebApplicationException(e.getMessage(), e.getResponse());
+        }
+    }
+
+      private Long calcularTempoRestante(ProvaRespondida provaRespondida){
+          LocalDateTime dataInicio = provaRespondida.getInicioProva().toInstant()
+                  .atZone(ZoneId.systemDefault())
+                  .toLocalDateTime();
+          LocalDateTime dataAtual = new Date().toInstant()
+                  .atZone(ZoneId.systemDefault())
+                  .toLocalDateTime();
+          Duration diff = Duration.between(dataInicio, dataAtual);
+          return diff.toSeconds();
+    };
+
+
+    public void validarResolucoes(Long id, String usuario){
+        try {
+            int realizacoes = find("finalizada = true AND usuario = ?1 AND prova_id = ?2", usuario, id).list().size();
+            Prova prova = provaRepository.buscarPorId(id);
+            if(realizacoes >= prova.getTentativas())throw new WebApplicationException("Sem mais realizações permitidas!");
+        }catch (WebApplicationException e){
+            throw new WebApplicationException(e.getMessage(), e.getResponse());
+        }
+    }
+
+    public void validarDatas(Long id){
+        try {
+            Prova prova = provaRepository.buscarPorId(id);
+            if(prova.getDataFinal()!=null && prova.getDataInicial()!=null){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate dataInicio = LocalDate.parse(prova.getDataInicial(), formatter);
+                LocalDate dataFim = LocalDate.parse(prova.getDataFinal(), formatter);
+                LocalDate dataAtual = LocalDate.parse(LocalDateTime.now().format(formatter));
+                if(!(dataInicio.isBefore(dataAtual) && dataFim.isAfter(dataAtual)) && !dataInicio.isEqual(dataAtual) && !dataFim.isEqual(dataAtual))
+                    throw new WebApplicationException("Periodo invalido!");
+            }else if(prova.getDataFinal()==null && prova.getDataInicial()!=null){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate dataInicio = LocalDate.parse(prova.getDataInicial(), formatter);
+                LocalDate dataAtual = LocalDate.parse(LocalDateTime.now().format(formatter));
+                if(!dataInicio.isEqual(dataAtual) && !dataInicio.isBefore(dataAtual))
+                    throw new WebApplicationException("Periodo invalido!");
+            }else if(prova.getDataFinal()!=null && prova.getDataInicial()==null){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate dataFim = LocalDate.parse(prova.getDataFinal(), formatter);
+                LocalDate dataAtual = LocalDate.parse(LocalDateTime.now().format(formatter));
+                if(!dataFim.isAfter(dataAtual) && !dataFim.isEqual(dataAtual))
+                    throw new WebApplicationException("Periodo invalido!");
+            }
+        }catch (WebApplicationException e){
+            throw new WebApplicationException(e.getMessage(), e.getResponse());
+        }
+    }
+
 
 
 }

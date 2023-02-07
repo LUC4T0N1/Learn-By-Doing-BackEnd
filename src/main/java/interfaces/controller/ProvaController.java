@@ -1,14 +1,11 @@
 package interfaces.controller;
 
 import aplicacao.service.ProvaService;
-import dominio.Questao;
 import infraestrutura.dto.CorrigirQuestoesDissertativasDto;
 import infraestrutura.dto.ProvaDto;
-import infraestrutura.dto.BuscarProvasDto;
 import infraestrutura.dto.ProvaRespondidaDto;
 import infraestrutura.repository.ProvaRepository;
 import infraestrutura.repository.ProvaRespondidaRepository;
-import infraestrutura.repository.QuestaoRepository;
 import interfaces.controller.resposta.RespostaAPI;
 import io.quarkus.logging.Log;
 import org.eclipse.microprofile.jwt.Claim;
@@ -23,7 +20,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.List;
 
 @RequestScoped
 @Path("api/prova")
@@ -116,7 +112,7 @@ public class ProvaController {
             description = "Faz uma busca paginada dos conteúdos ordenados por quantidade de provas")
     public Response buscarProvaFazerPorId(@QueryParam("id") Long id) {
         return api.retornar(
-                provaRepository.buscarProvaInteiraFazer(id, new ArrayList<>(), false)
+                provaRepository.buscarProvaInteiraFazer(id, new ArrayList<>(), false, usuario)
         );
     }
 
@@ -151,7 +147,7 @@ public class ProvaController {
     public Response buscarProvaRespondidaPorId(@QueryParam("id") Long id) {
         System.out.println(divisao + "\n[Buscar Provas Respondidas Por Prova Criada] iniciando filtro simples ->  id: " + id + " usuario: " + usuario);
         return api.retornar(
-                provaRespondidaRepository.buscarProvaRespondidaInteira(id)
+                provaRespondidaRepository.buscarResolucoesProvaRespondidaInteira(id)
         );
     }
 
@@ -224,6 +220,24 @@ public class ProvaController {
     @Path("/obterIdProvaPrivada")
     public Response obterIdProvaPrivada(@QueryParam("idSecreto") String idSecreto) {
         return api.retornar(provaRepository.obterIdProvaPrivada(idSecreto));
+    }
+
+    @GET
+    @Path("/iniciarProva")
+    public Response iniciarProvaPrivada(@QueryParam("id") Long id) {
+        return api.retornar(provaRespondidaRepository.iniciarProvaPrivada(id, usuario));
+    }
+
+    @GET
+    @Path("/validarResolucoes")
+    public void validarResolucoes(@QueryParam("id") Long id) {
+        provaRespondidaRepository.validarResolucoes(id, usuario);
+    }
+
+    @GET
+    @Path("/validarDatas")
+    public void validarDatas(@QueryParam("id") Long id) {
+        provaRespondidaRepository.validarDatas(id);
     }
 
 }

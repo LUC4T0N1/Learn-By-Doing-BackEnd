@@ -1,9 +1,5 @@
 package infraestrutura.repository;
-import aplicacao.utlis.DataUtils;
-import dominio.Prova;
-import dominio.Questao;
-import dominio.QuestaoRespondida;
-import dominio.ValorQuestao;
+import dominio.*;
 import infraestrutura.dto.*;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.logging.Log;
@@ -28,6 +24,9 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
     EntityManager em;
     @Inject QuestaoRepository questaoRepository;
     @Inject ValorQuestaoRepository valorQuestaoRepository;
+
+
+    @Inject ProvaRespondidaRepository provaRespondidaRepository;
 
     public Prova buscarPorId(Long id) {
         Prova prova = findById(id);
@@ -68,12 +67,14 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
         }
     }
 
-    public ProvaDto buscarProvaInteiraFazer(Long id, List<QuestaoRespondida> respostas, Boolean setResposta) {
+    public ProvaDto buscarProvaInteiraFazer(Long id, List<QuestaoRespondida> respostas, Boolean setResposta, String usuario) {
         try {
             Prova prova = findById(id);
             if (prova == null) throw new WebApplicationException("Prova não encontrada", Response.Status.NOT_FOUND);
             List<ValorQuestao> valorQuestoes = valorQuestaoRepository.buscarValores(id);
-            return ProvaDto.instanciarPorEntidade(prova, respostas, setResposta, valorQuestoes, true);
+            ProvaDto dto =  ProvaDto.instanciarPorEntidade(prova, respostas, setResposta, valorQuestoes, true);
+            dto.realizacoes = provaRespondidaRepository.buscarResolucoesProvaRespondidaInteira(prova.getId(), usuario);
+            return dto;
         } catch (WebApplicationException e) {
             throw new WebApplicationException(e.getMessage(), e.getResponse());
         }

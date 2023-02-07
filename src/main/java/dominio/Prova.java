@@ -18,7 +18,7 @@ public class Prova extends ObjetoDeDominio{
     private String idSecreto;
 
     @Column
-    private BigDecimal tempo;
+    private Long tempo;
 
     @Column(name = "quantidade_questoes")
     private int quantidadeQuestoes;
@@ -67,10 +67,8 @@ public class Prova extends ObjetoDeDominio{
         prova.setMediaNotas(new BigDecimal(0));
         prova.setQuantidadeQuestoes(questoes.size());
         prova.setTempo(dto.tempo);
-        if(dto.dataInicial!= null && dto.dataFinal!= null){
-            prova.setDataInicial(dto.dataInicial);
-            prova.setDataFinal(dto.dataFinal);
-        }
+        prova.setDataInicial(dto.dataInicial);
+        prova.setDataFinal(dto.dataFinal);
         return prova;
     }
 
@@ -146,11 +144,11 @@ public class Prova extends ObjetoDeDominio{
         this.realizacoes = realizacoes;
     }
 
-    public BigDecimal getTempo() {
+    public Long getTempo() {
         return tempo;
     }
 
-    public void setTempo(BigDecimal tempo) {
+    public void setTempo(Long tempo) {
         this.tempo = tempo;
     }
 

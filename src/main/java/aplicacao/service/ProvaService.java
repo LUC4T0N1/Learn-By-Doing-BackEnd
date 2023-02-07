@@ -29,6 +29,8 @@ public class ProvaService {
 
     @Transactional
     public void cadastrarNovaProva(ProvaDto dto, String usuario){
+        System.out.println("ini"+dto.dataFinal);
+        System.out.println("fin"+dto.dataInicial);
         List<Questao> questoes = questaoRepository.buscarPorIds(dto.idsQuestoes);
         String idSecreto = null;
         if(!dto.publica){

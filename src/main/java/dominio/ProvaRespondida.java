@@ -1,9 +1,11 @@
 package dominio;
 
 import infraestrutura.dto.ProvaRespondidaDto;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "prova_respondida")
@@ -32,6 +34,13 @@ public class ProvaRespondida extends ObjetoDeDominio{
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "prova")
     private List<QuestaoRespondida> questoesRespondidas;
 
+    @Column(name = "inicio_prova")
+    private Date inicioProva;
+
+    @Column(name = "finalizada")
+    private Boolean finalizada;
+
+
 
     protected ProvaRespondida(){}
 
@@ -43,6 +52,7 @@ public class ProvaRespondida extends ObjetoDeDominio{
         provaRespondida.setUsuario(usuario);
         provaRespondida.setNotaAluno(new BigDecimal(0));
         provaRespondida.setCorrigida(false);
+        provaRespondida.setInicioProva(new Date());
         return  provaRespondida;
     }
 
@@ -79,6 +89,14 @@ public class ProvaRespondida extends ObjetoDeDominio{
         this.questoesRespondidas = questoesRespondidas;
     }
 
+    public Date getInicioProva() {
+        return inicioProva;
+    }
+
+    public void setInicioProva(Date inicioProva) {
+        this.inicioProva = inicioProva;
+    }
+
     public void setEmailAluno(String emailAluno) {
         this.emailAluno = emailAluno;
     }
@@ -110,4 +128,13 @@ public class ProvaRespondida extends ObjetoDeDominio{
     public void setCorrigida(Boolean corrigida) {
         this.corrigida = corrigida;
     }
+
+    public Boolean getFinalizada() {
+        return finalizada;
+    }
+
+    public void setFinalizada(Boolean finalizada) {
+        this.finalizada = finalizada;
+    }
 }
+
