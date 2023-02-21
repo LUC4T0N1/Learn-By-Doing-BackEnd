@@ -100,12 +100,14 @@ public class UsuarioService {
     public void validarSenha(String senhaRecebida, String senhaUsuario) {
         try {
             System.out.println("[Logar Usuario] Validando senha...");
-            if(!Objects.equals(Usuario.cryptografarSenha(senhaRecebida), senhaUsuario))
+            if(!Objects.equals(Usuario.cryptografarSenha(senhaRecebida), senhaUsuario)) {
+                System.out.println("Senha incorreta!");
                 throw new WebApplicationException("Senha incorreta!", 401);
+            }
         }catch (WebApplicationException e){
             throw new WebApplicationException(e.getMessage(), e.getResponse().getStatus());
         }
-    }
+}
 
     @Transactional
     public void alterarSenha(TrocarSenhaDto dto, String usuario) {

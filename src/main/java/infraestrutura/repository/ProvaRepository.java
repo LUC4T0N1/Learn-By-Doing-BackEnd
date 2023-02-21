@@ -115,6 +115,7 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
             else if (ordenacao == 1) filtro = "nome";
             else if (ordenacao == 2) filtro = "quantidade_questoes";
             else if(ordenacao == 3) filtro = "realizacoes";
+            else if(ordenacao == 4) filtro = "media_notas";
             else throw new WebApplicationException("Requisição errada!", Response.Status.BAD_REQUEST);
             List<Prova> provas = new ArrayList<>();
             Long total = 0L;
@@ -174,6 +175,7 @@ public class ProvaRepository  implements PanacheRepository<Prova> {
             if(ordenacao == 0) filtro = "nome";
             else if (ordenacao == 1) filtro = "quantidade_questoes";
             else if(ordenacao == 2) filtro = "realizacoes";
+            else if(ordenacao == 3) filtro = "media_notas";
             else throw new WebApplicationException("Requisição errada!", Response.Status.BAD_REQUEST);
             List<Prova> provas = new ArrayList<>();
             List<ProvaDto> provasDto = new ArrayList<>();
