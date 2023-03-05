@@ -4,15 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.jwt.auth.principal.*;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jose4j.jwa.AlgorithmConstraints;
-import org.jose4j.jws.AlgorithmIdentifiers;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -22,6 +13,15 @@ import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import javax.annotation.Priority;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jose4j.jwa.AlgorithmConstraints;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 
 @ApplicationScoped
 @Alternative
@@ -53,7 +53,7 @@ public class ValidacaoToken extends JWTCallerPrincipalFactory {
       String keyId = obterKeyIdToken(token);
       JwtConsumer jwtConsumer = obterConsumerToken(keyId, authContextInfo);
       JwtClaims claims = jwtConsumer.processToClaims(token);
-//      validarClaims(claims, authContextInfo);
+      //      validarClaims(claims, authContextInfo);
       return new DefaultJWTCallerPrincipal(claims);
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -76,7 +76,7 @@ public class ValidacaoToken extends JWTCallerPrincipalFactory {
 
   private PublicKey obterChavePublica(String keyId)
       throws NoSuchAlgorithmException, InvalidKeySpecException, CertificateException, IOException {
-    return obterChavePublicaCaixas() ;
+    return obterChavePublicaCaixas();
   }
 
   private PublicKey obterChavePublicaCaixas()
@@ -86,8 +86,6 @@ public class ValidacaoToken extends JWTCallerPrincipalFactory {
     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
     return keyFactory.generatePublic(keySpec);
   }
-
-
 
   @SuppressWarnings("unchecked")
   private static class HeaderJwt {

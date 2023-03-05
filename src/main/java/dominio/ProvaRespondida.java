@@ -1,140 +1,131 @@
 package dominio;
 
-import infraestrutura.dto.ProvaRespondidaDto;
-import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.*;
 
 @Entity(name = "prova_respondida")
-public class ProvaRespondida extends ObjetoDeDominio{
-    @Column(name = "questoes_corrigidas")
-    private int questoesCorrigidas;
+public class ProvaRespondida extends ObjetoDeDominio {
+  @Column(name = "questoes_corrigidas")
+  private int questoesCorrigidas;
 
-    @ManyToOne
-    private Prova prova;
+  @ManyToOne private Prova prova;
 
-    @Column
-    private Boolean corrigida;
+  @Column private Boolean corrigida;
 
-    @Column
-    public int resolucoes;
+  @Column public int resolucoes;
 
-    @Column(name = "nome_aluno")
-    private String nomeAluno;
+  @Column(name = "nome_aluno")
+  private String nomeAluno;
 
-    @Column(name = "email_aluno")
-    private String emailAluno;
+  @Column(name = "email_aluno")
+  private String emailAluno;
 
-    @Column(name = "nota_aluno")
-    private BigDecimal notaAluno;
+  @Column(name = "nota_aluno")
+  private BigDecimal notaAluno;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "prova")
-    private List<QuestaoRespondida> questoesRespondidas;
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "prova")
+  private List<QuestaoRespondida> questoesRespondidas;
 
-    @Column(name = "inicio_prova")
-    private Date inicioProva;
+  @Column(name = "inicio_prova")
+  private Date inicioProva;
 
-    @Column(name = "finalizada")
-    private Boolean finalizada;
+  @Column(name = "finalizada")
+  private Boolean finalizada;
 
+  protected ProvaRespondida() {}
 
+  public static ProvaRespondida instanciar(Prova prova, String usuario, Usuario usuarioObj) {
+    ProvaRespondida provaRespondida = new ProvaRespondida();
+    provaRespondida.setEmailAluno(usuarioObj.getEmail());
+    provaRespondida.setNomeAluno(usuarioObj.getNome());
+    provaRespondida.setProva(prova);
+    provaRespondida.setUsuario(usuario);
+    provaRespondida.setNotaAluno(new BigDecimal(0));
+    provaRespondida.setCorrigida(false);
+    provaRespondida.setInicioProva(new Date());
+    return provaRespondida;
+  }
 
-    protected ProvaRespondida(){}
+  public Prova getProva() {
+    return prova;
+  }
 
-    public static ProvaRespondida instanciar(Prova prova, String usuario, Usuario usuarioObj){
-        ProvaRespondida provaRespondida = new ProvaRespondida();
-        provaRespondida.setEmailAluno(usuarioObj.getEmail());
-        provaRespondida.setNomeAluno(usuarioObj.getNome());
-        provaRespondida.setProva(prova);
-        provaRespondida.setUsuario(usuario);
-        provaRespondida.setNotaAluno(new BigDecimal(0));
-        provaRespondida.setCorrigida(false);
-        provaRespondida.setInicioProva(new Date());
-        return  provaRespondida;
-    }
+  public String getNomeAluno() {
+    return nomeAluno;
+  }
 
-    public Prova getProva() {
-        return prova;
-    }
+  public String getEmailAluno() {
+    return emailAluno;
+  }
 
-    public String getNomeAluno() {
-        return nomeAluno;
-    }
+  public List<QuestaoRespondida> getQuestoesRespondidas() {
+    return questoesRespondidas;
+  }
 
-    public String getEmailAluno() {
-        return emailAluno;
-    }
+  public BigDecimal getNotaAluno() {
+    return notaAluno;
+  }
 
-    public List<QuestaoRespondida> getQuestoesRespondidas() {
-        return questoesRespondidas;
-    }
+  public void setProva(Prova prova) {
+    this.prova = prova;
+  }
 
-    public BigDecimal getNotaAluno() {
-        return notaAluno;
-    }
+  public void setNomeAluno(String nomeAluno) {
+    this.nomeAluno = nomeAluno;
+  }
 
+  public void setQuestoesRespondidas(List<QuestaoRespondida> questoesRespondidas) {
+    this.questoesRespondidas = questoesRespondidas;
+  }
 
-    public void setProva(Prova prova) {
-        this.prova = prova;
-    }
+  public Date getInicioProva() {
+    return inicioProva;
+  }
 
-    public void setNomeAluno(String nomeAluno) {
-        this.nomeAluno = nomeAluno;
-    }
+  public void setInicioProva(Date inicioProva) {
+    this.inicioProva = inicioProva;
+  }
 
-    public void setQuestoesRespondidas(List<QuestaoRespondida> questoesRespondidas) {
-        this.questoesRespondidas = questoesRespondidas;
-    }
+  public void setEmailAluno(String emailAluno) {
+    this.emailAluno = emailAluno;
+  }
 
-    public Date getInicioProva() {
-        return inicioProva;
-    }
+  public void setNotaAluno(BigDecimal notaAluno) {
+    this.notaAluno = notaAluno;
+  }
 
-    public void setInicioProva(Date inicioProva) {
-        this.inicioProva = inicioProva;
-    }
+  public int getQuestoesCorrigidas() {
+    return questoesCorrigidas;
+  }
 
-    public void setEmailAluno(String emailAluno) {
-        this.emailAluno = emailAluno;
-    }
+  public void setQuestoesCorrigidas(int questoesCorrigidas) {
+    this.questoesCorrigidas = questoesCorrigidas;
+  }
 
-    public void setNotaAluno(BigDecimal notaAluno) {
-        this.notaAluno = notaAluno;
-    }
+  public Boolean getCorrigida() {
+    return corrigida;
+  }
 
-    public int getQuestoesCorrigidas() {
-        return questoesCorrigidas;
-    }
+  public int getResolucoes() {
+    return resolucoes;
+  }
 
-    public void setQuestoesCorrigidas(int questoesCorrigidas) {
-        this.questoesCorrigidas = questoesCorrigidas;
-    }
+  public void setResolucoes(int resolucoes) {
+    this.resolucoes = resolucoes;
+  }
 
-    public Boolean getCorrigida() {
-        return corrigida;
-    }
+  public void setCorrigida(Boolean corrigida) {
+    this.corrigida = corrigida;
+  }
 
-    public int getResolucoes() {
-        return resolucoes;
-    }
+  public Boolean getFinalizada() {
+    return finalizada;
+  }
 
-    public void setResolucoes(int resolucoes) {
-        this.resolucoes = resolucoes;
-    }
-
-    public void setCorrigida(Boolean corrigida) {
-        this.corrigida = corrigida;
-    }
-
-    public Boolean getFinalizada() {
-        return finalizada;
-    }
-
-    public void setFinalizada(Boolean finalizada) {
-        this.finalizada = finalizada;
-    }
+  public void setFinalizada(Boolean finalizada) {
+    this.finalizada = finalizada;
+  }
 }
-

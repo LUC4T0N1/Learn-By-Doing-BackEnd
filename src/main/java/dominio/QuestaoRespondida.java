@@ -1,74 +1,70 @@
 package dominio;
 
 import infraestrutura.dto.QuestaoRespondidaDto;
-
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import java.math.BigDecimal;
-import java.util.Optional;
 
 @Entity(name = "questao_respondida")
-public class QuestaoRespondida extends ObjetoDeDominio{
-    @ManyToOne
-    private Questao questao;
+public class QuestaoRespondida extends ObjetoDeDominio {
+  @ManyToOne private Questao questao;
 
-    @Column(name = "resposta_aluno")
-    private String respostaAluno;
+  @Column(name = "resposta_aluno")
+  private String respostaAluno;
 
-    @Column(name = "nota_aluno")
-    private BigDecimal notaAluno;
+  @Column(name = "nota_aluno")
+  private BigDecimal notaAluno;
 
-    @ManyToOne
-    private ProvaRespondida prova;
+  @ManyToOne private ProvaRespondida prova;
 
-    @Column(name = "comentario_professor")
-    private String comentarioProfessor;
+  @Column(name = "comentario_professor")
+  private String comentarioProfessor;
 
+  protected QuestaoRespondida() {}
 
-    protected QuestaoRespondida(){}
+  public static QuestaoRespondida instanciar(
+      QuestaoRespondidaDto dto, Questao questao, String usuario) {
+    QuestaoRespondida questaoRespondida = new QuestaoRespondida();
+    questaoRespondida.setRespostaAluno(dto.respostaAluno);
+    questaoRespondida.setQuestao(questao);
+    questaoRespondida.setUsuario(usuario);
+    return questaoRespondida;
+  }
 
-    public static QuestaoRespondida instanciar(QuestaoRespondidaDto dto, Questao questao, String usuario){
-        QuestaoRespondida questaoRespondida = new QuestaoRespondida();
-        questaoRespondida.setRespostaAluno(dto.respostaAluno);
-        questaoRespondida.setQuestao(questao);
-        questaoRespondida.setUsuario(usuario);
-        return questaoRespondida;
-    }
+  public Questao getQuestao() {
+    return questao;
+  }
 
-    public Questao getQuestao() {
-        return questao;
-    }
+  public void setQuestao(Questao questao) {
+    this.questao = questao;
+  }
 
-    public void setQuestao(Questao questao) {
-        this.questao = questao;
-    }
+  public String getRespostaAluno() {
+    return respostaAluno;
+  }
 
-    public String getRespostaAluno() {
-        return respostaAluno;
-    }
+  public void setRespostaAluno(String respostaAluno) {
+    this.respostaAluno = respostaAluno;
+  }
 
-    public void setRespostaAluno(String respostaAluno) {
-        this.respostaAluno = respostaAluno;
-    }
+  public BigDecimal getNotaAluno() {
+    return notaAluno;
+  }
 
-    public BigDecimal getNotaAluno() {
-        return notaAluno;
-    }
+  public void setNotaAluno(BigDecimal notaAluno) {
+    this.notaAluno = notaAluno;
+  }
 
-    public void setNotaAluno(BigDecimal notaAluno) {
-        this.notaAluno = notaAluno;
-    }
+  public String getComentarioProfessor() {
+    return comentarioProfessor;
+  }
 
-    public String getComentarioProfessor() {
-        return comentarioProfessor;
-    }
+  public void setComentarioProfessor(String comentarioProfessor) {
+    this.comentarioProfessor = comentarioProfessor;
+  }
 
-    public void setComentarioProfessor(String comentarioProfessor) {
-        this.comentarioProfessor = comentarioProfessor;
-    }
-
-    public void setProvaRespondida(ProvaRespondida provaRespondida) {
-        this.prova = provaRespondida;
-    }
+  public void setProvaRespondida(ProvaRespondida provaRespondida) {
+    this.prova = provaRespondida;
+  }
 }

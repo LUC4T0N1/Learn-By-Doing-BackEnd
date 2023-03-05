@@ -1,5 +1,3 @@
 package infraestrutura.dto;
 
-public class FiltrarQuestoesDto {
-
-}
+public class FiltrarQuestoesDto {}
