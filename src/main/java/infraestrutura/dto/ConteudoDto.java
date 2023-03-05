@@ -10,6 +10,8 @@ public class ConteudoDto {
   public Long idConteudo;
   public Long numeroProvas;
 
+  public Long numeroProvasPublicas;
+
   protected ConteudoDto() {}
 
   public static ConteudoDto instanciarPorEntidade(Conteudo conteudo) {
@@ -17,6 +19,7 @@ public class ConteudoDto {
     conteudoDto.setNome(conteudo.getNome());
     conteudoDto.setIdConteudo(conteudo.getId());
     conteudoDto.setNumeroProvas(conteudo.getNumeroProvas());
+    conteudoDto.setNumeroProvasPublicas(conteudo.getNumeroProvasPublicas());
     return conteudoDto;
   }
 
@@ -42,5 +45,9 @@ public class ConteudoDto {
 
   public void setNumeroProvas(Long numeroProvas) {
     this.numeroProvas = numeroProvas;
+  }
+
+  public void setNumeroProvasPublicas(Long numeroProvasPublicas) {
+    this.numeroProvasPublicas = numeroProvasPublicas;
   }
 }

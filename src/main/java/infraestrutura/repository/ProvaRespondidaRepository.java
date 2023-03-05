@@ -79,7 +79,6 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
       Log.info("Prova realizada com sucesso!");
     } catch (Exception e) {
       throw new WebApplicationException(e);
-      // WebApplicationException(e.getMessage(), e.getResponse());
     }
   }
 

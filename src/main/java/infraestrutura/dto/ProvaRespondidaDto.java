@@ -20,6 +20,8 @@ public class ProvaRespondidaDto {
   public List<QuestaoRespondidaDto> questoesRespondidasDto;
   public int resolucoes;
 
+  public String dataResolucao;
+
   protected ProvaRespondidaDto() {}
 
   public static ProvaRespondidaDto instanciar(ProvaRespondida provaRespondida) {
@@ -34,7 +36,16 @@ public class ProvaRespondidaDto {
     realizarProvaDto.setTotalQuestoes(provaRespondida.getProva().getQuestoes().size());
     realizarProvaDto.setResolucoes(provaRespondida.getResolucoes());
     realizarProvaDto.setTotalmenteCorrigida(provaRespondida.getCorrigida());
+    realizarProvaDto.setDataResolucao(provaRespondida.getInclusao().toString());
     return realizarProvaDto;
+  }
+
+  public String getDataResolucao() {
+    return dataResolucao;
+  }
+
+  public void setDataResolucao(String dataResolucao) {
+    this.dataResolucao = dataResolucao;
   }
 
   public String getNomeAluno() {

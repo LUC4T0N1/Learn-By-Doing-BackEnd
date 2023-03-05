@@ -10,6 +10,9 @@ public class Conteudo extends ObjetoDeDominio {
   @Column(name = "numero_provas")
   private Long numeroProvas;
 
+  @Column(name = "numero_provas_publicas")
+  private Long numeroProvasPublicas;
+
   @Column(name = "numero_questoes")
   private Long numeroQuestoes;
 
@@ -32,8 +35,13 @@ public class Conteudo extends ObjetoDeDominio {
     conteudo.setNome(nome);
     conteudo.setNumeroProvas(0L);
     conteudo.setNumeroQuestoes(0L);
+    conteudo.setNumeroProvasPublicas(0L);
     conteudo.setUsuario(usuario);
     return conteudo;
+  }
+
+  public void setNumeroProvasPublicas(Long numeroProvasPublicas) {
+    this.numeroProvasPublicas = numeroProvasPublicas;
   }
 
   public String getNome() {
@@ -58,6 +66,10 @@ public class Conteudo extends ObjetoDeDominio {
 
   public Long getNumeroProvas() {
     return numeroProvas;
+  }
+
+  public Long getNumeroProvasPublicas() {
+    return numeroProvasPublicas;
   }
 
   public List<Questao> getQuestoes() {
