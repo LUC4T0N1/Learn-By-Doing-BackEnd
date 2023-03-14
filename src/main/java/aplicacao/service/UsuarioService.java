@@ -12,6 +12,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 @ApplicationScoped
 public class UsuarioService {
@@ -85,8 +86,9 @@ public class UsuarioService {
             usuario.getUsuario());
       }
 
-    } catch (WebApplicationException e) {
-      throw new WebApplicationException(e.getMessage(), e.getResponse().getStatus());
+    } catch (Exception e) {
+      Log.error("Erro ao logar usuario! ", e);
+      throw new WebApplicationException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
     }
   }
 

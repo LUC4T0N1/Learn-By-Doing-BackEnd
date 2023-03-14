@@ -55,7 +55,8 @@ public class ProvaService {
       Conteudo conteudo = conteudoRepository.buscarPorID(idConteudo);
       conteudo.getProvas().add(prova);
       conteudo.setNumeroProvas(conteudo.getNumeroProvas() + 1L);
-      if(prova.getPublica())conteudo.setNumeroProvasPublicas(conteudo.getNumeroProvasPublicas() + 1L);
+      if (prova.getPublica())
+        conteudo.setNumeroProvasPublicas(conteudo.getNumeroProvasPublicas() + 1L);
     }
     Log.info("Prova cadastrada com sucesso!");
   }

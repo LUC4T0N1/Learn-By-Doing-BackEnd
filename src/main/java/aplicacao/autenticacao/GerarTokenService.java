@@ -31,11 +31,13 @@ public class GerarTokenService {
       Log.info("token: \n " + token);
       return token;
     } catch (WebApplicationException we) {
-      Log.info("Erro ao gerar token do caixa!!");
+      Log.info("Erro ao gerar token!!");
       throw we;
     } catch (NoSuchAlgorithmException e) {
+      Log.info("Erro ao gerar token!!");
       throw new RuntimeException(e);
     } catch (InvalidKeySpecException e) {
+      Log.info("Erro ao gerar token!!");
       throw new RuntimeException(e);
     }
   }

@@ -1,6 +1,5 @@
 package dominio;
 
-
 public class TempoProvaDto {
   public Boolean temTempo;
   public Long tempoRestante;
