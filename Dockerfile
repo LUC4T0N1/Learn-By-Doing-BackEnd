@@ -13,4 +13,4 @@ RUN mvn -f /home/app/pom.xml clean package
 FROM openjdk:11
 #COPY --from=build /home/app/target/PGC-1.0.0-runner.jar /usr/local/lib/demo.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/home/app/target/PGC-1.0.0-runner.jar"]
+ENTRYPOINT ["java","-jar","/home/app/target/PGC-1.0.0.jar"]
