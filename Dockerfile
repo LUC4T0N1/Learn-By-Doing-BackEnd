@@ -3,8 +3,8 @@
 # Build stage
 #
 FROM maven:3.6.3-jdk-11 AS build
-# COPY src src
-# COPY pom.xml
+COPY src /home/app/src
+COPY pom.xml /home/app
 RUN mvn clean package
 
 #
