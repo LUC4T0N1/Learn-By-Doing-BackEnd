@@ -1,16 +1,9 @@
+FROM maven:3.6.3-jdk-11-slim  AS build
+COPY src /usr/src/app/src
+COPY pom.xml /usr/src/app
+RUN mvn -f /usr/src/app/pom.xml clean package
 
-#
-# Build stage
-#
-FROM maven:3.6.3-jdk-11 AS build
-# COPY src src
-# COPY pom.xml
-RUN mvn clean package
-
-#
-# Package stage
-#
-FROM openjdk:11
-#COPY --from=build /home/app/target/PGC-1.0.0-runner.jar /usr/local/lib/demo.jar
+FROM gcr.io/distroless/java
+COPY --from=build /usr/src/app/targetPGCI-1.0.0.jar /usr/app/PGCI-1.0.0.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","target/PGCI-1.0.0.jar"]
+ENTRYPOINT ["java","-jar","/usr/app/PGCI-1.0.0.jar"]
