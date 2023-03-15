@@ -4,7 +4,7 @@
 FROM maven:3.6.3-jdk-11 AS build
 # COPY src /home/app/src
 # COPY pom.xml /home/app/pom.xml
-RUN mvn clean package -DskipTests
+RUN mvn -f /home/app/pom.xml clean package -DskipTests
 
 #
 # Package stage
