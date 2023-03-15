@@ -1,4 +1,5 @@
 FROM maven:3.6.3-jdk-11-slim  AS build
+WORKDIR /app
 COPY src ./src
 COPY pom.xml .
 RUN mvn -f /usr/src/app/pom.xml clean package -Dmaven.test.skip
