@@ -28,6 +28,10 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
 COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/quarkus-run.jar
 
