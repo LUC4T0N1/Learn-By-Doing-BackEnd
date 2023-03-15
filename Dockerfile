@@ -14,6 +14,8 @@ RUN mvn -f /home/app/pom.xml clean package
 FROM registry.access.redhat.com/ubi8/openjdk-11:1.11
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 # We make four distinct layers so if there are application changes the library layers can be re-used
+RUN ls -la
+RUN pwd
 COPY --chown=185 target/LBD-railway.jar /deployments/
 
 EXPOSE 8080
