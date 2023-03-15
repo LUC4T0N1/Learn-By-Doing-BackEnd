@@ -4,6 +4,6 @@ RUN cp pom.xml /usr/src/app
 RUN mvn -f /usr/src/app/pom.xml clean package
 
 FROM gcr.io/distroless/java
-RUN cp --from=build /usr/src/app/target/PGCI-1.0.0.jar /usr/app/PGCI-1.0.0.jar
+COPY --from=build /usr/src/app/target/PGCI-1.0.0.jar /usr/app/PGCI-1.0.0.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/usr/app/PGCI-1.0.0.jar"]
