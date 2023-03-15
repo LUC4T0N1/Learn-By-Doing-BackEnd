@@ -1,41 +1,15 @@
-####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
 #
-# Before building the container image run:
+# Build stage
 #
-# ./mvnw package -Dquarkus.package.type=legacy-jar
-#
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.legacy-jar -t quarkus/NFE-NFCE-legacy-jar .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 quarkus/NFE-NFCE-legacy-jar
-#
-# If you want to include the debug port into your docker image
-# you will have to expose the debug port (default 5005) like this :  EXPOSE 8080 5005
-#
-# Then run the container using :
-#
-# docker run -i --rm -p 8080:8080 quarkus/NFE-NFCE-legacy-jar
-#
-###
-FROM registry.access.redhat.com/ubi8/openjdk-11-runtime:1.10
-
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
-
-# Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-
+FROM maven:3.6.0-jdk-11-slim AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/quarkus-run.jar
-
+#
+# Package stage
+#
+FROM openjdk:11-jre-slim
+COPY --from=build /home/app/target/PGCI-1.0.0.jar /usr/local/lib/demo.jar
 EXPOSE 8080
-USER 185
-
-ENTRYPOINT [ "java", "-jar", "/deployments/quarkus-run.jar" ]
+ENTRYPOINT ["java","-jar","/usr/local/lib/demo.jar"]
