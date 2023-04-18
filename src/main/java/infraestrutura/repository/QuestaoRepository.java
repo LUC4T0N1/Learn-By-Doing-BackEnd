@@ -71,12 +71,13 @@ public class QuestaoRepository implements PanacheRepository<Questao> {
       List<Integer> conteudos,
       int multiplaEscolha,
       boolean publica,
-      List<Long> idsQuestoes) {
+      List<Long> idsQuestoes,
+      String usuario) {
     try {
       Log.info("Buscando quantidade..");
       List<Long> ids =
           construirQueryQuantidade(
-              enunciado, ordenacao, ordem, conteudos, multiplaEscolha, publica);
+              enunciado, ordenacao, ordem, conteudos, multiplaEscolha, publica, usuario);
       ids.removeIf(idsQuestoes::contains);
       return (long) find("id in ?1", ids).list().size();
     } catch (Exception e) {
@@ -92,10 +93,12 @@ public class QuestaoRepository implements PanacheRepository<Questao> {
       List<Integer> conteudos,
       int multiplaEscolha,
       boolean publica,
-      List<Long> idsQuestoes) {
+      List<Long> idsQuestoes,
+      String usuario) {
     try {
       List<Long> ids =
-          construirQuery(pagina, enunciado, ordenacao, ordem, conteudos, multiplaEscolha, publica);
+          construirQuery(
+              pagina, enunciado, ordenacao, ordem, conteudos, multiplaEscolha, publica, usuario);
       ids.removeIf(idsQuestoes::contains);
       String orderBy = "enunciado";
       if (ordenacao == 1) orderBy = "inclusao";
@@ -113,7 +116,8 @@ public class QuestaoRepository implements PanacheRepository<Questao> {
       Integer ordem,
       List<Integer> conteudos,
       int multiplaEscolha,
-      boolean publica) {
+      boolean publica,
+      String usuario) {
     try {
       boolean tipoEspecifico = false;
       if (multiplaEscolha > 0) tipoEspecifico = true;
@@ -122,7 +126,7 @@ public class QuestaoRepository implements PanacheRepository<Questao> {
       else if (multiplaEscolha == 2) tipoQuestao = false;
       StringBuilder querySB = new StringBuilder("SELECT questao.id FROM questao ");
       if (conteudos.size() > 0) temConteudo(querySB);
-      privacidade(querySB, publica);
+      privacidade(querySB, publica, usuario);
       if (conteudos.size() > 0) conteudos(querySB);
       if (!Objects.equals(enunciado, "null")) enunciado(querySB, enunciado);
       if (tipoEspecifico) tipoEspecifico(querySB, tipoQuestao);
@@ -147,7 +151,8 @@ public class QuestaoRepository implements PanacheRepository<Questao> {
       Integer ordem,
       List<Integer> conteudos,
       int multiplaEscolha,
-      boolean publica) {
+      boolean publica,
+      String usuario) {
     try {
       Log.info("Construindo query...");
       boolean tipoEspecifico = false;
@@ -157,7 +162,7 @@ public class QuestaoRepository implements PanacheRepository<Questao> {
       else if (multiplaEscolha == 2) tipoQuestao = false;
       StringBuilder querySB = new StringBuilder("SELECT questao.id FROM questao ");
       if (conteudos.size() > 0) temConteudo(querySB);
-      privacidade(querySB, publica);
+      privacidade(querySB, publica, usuario);
       if (conteudos.size() > 0) conteudos(querySB);
       if (!Objects.equals(enunciado, "null")) enunciado(querySB, enunciado);
       if (tipoEspecifico) tipoEspecifico(querySB, tipoQuestao);
@@ -181,11 +186,11 @@ public class QuestaoRepository implements PanacheRepository<Questao> {
     query.append(" INNER JOIN conteudo_questao cont_quest ON cont_quest.questao_id = questao.id ");
   }
 
-  private void privacidade(StringBuilder query, Boolean publica) {
+  private void privacidade(StringBuilder query, Boolean publica, String usuario) {
     if (publica) {
       query.append(" WHERE publica = TRUE");
     } else {
-      query.append(" WHERE publica = FALSE");
+      query.append(" WHERE publica = FALSE AND usuario = \"" + usuario + "\"");
     }
   }
 

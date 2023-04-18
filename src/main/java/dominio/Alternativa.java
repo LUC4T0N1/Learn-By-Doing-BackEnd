@@ -7,7 +7,8 @@ import javax.persistence.ManyToOne;
 
 @Entity(name = "alternativa")
 public class Alternativa extends ObjetoDeDominio {
-  @Column private String enunciado;
+  @Column(length = 10000, columnDefinition = "TEXT")
+  private String enunciado;
 
   @Column private Boolean correta;
 

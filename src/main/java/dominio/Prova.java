@@ -8,7 +8,8 @@ import javax.persistence.*;
 @Entity(name = "prova")
 public class Prova extends ObjetoDeDominio {
 
-  @Column private String nome;
+  @Column(length = 1000, columnDefinition = "TEXT")
+  private String nome;
 
   @Column(name = "id_secreto")
   private String idSecreto;

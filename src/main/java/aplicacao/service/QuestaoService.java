@@ -63,7 +63,8 @@ public class QuestaoService {
       List<Integer> conteudos,
       int multiplaEscolha,
       boolean publica,
-      List<Long> idsQuestoes) {
+      List<Long> idsQuestoes,
+      String usuario) {
     try {
       List<Questao> questoes =
           questaoRepository.filtrar(
@@ -74,10 +75,18 @@ public class QuestaoService {
               conteudos,
               multiplaEscolha,
               publica,
-              idsQuestoes);
+              idsQuestoes,
+              usuario);
       Long quantidade =
           questaoRepository.quantidade(
-              enunciado, ordenacao, ordem, conteudos, multiplaEscolha, publica, idsQuestoes);
+              enunciado,
+              ordenacao,
+              ordem,
+              conteudos,
+              multiplaEscolha,
+              publica,
+              idsQuestoes,
+              usuario);
       List<QuestaoDto> questoesDto =
           questoes.stream()
               .map(

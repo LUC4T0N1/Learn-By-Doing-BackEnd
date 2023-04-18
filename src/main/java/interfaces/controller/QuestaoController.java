@@ -77,6 +77,14 @@ public class QuestaoController {
     Log.info(divisao + "\n Iniciando Busca de Questões");
     return api.retornar(
         questaoService.filtrarQuestoes(
-            pagina, enunciado, ordenacao, ordem, conteudos, multiplaEscolha, publica, idsQuestoes));
+            pagina,
+            enunciado,
+            ordenacao,
+            ordem,
+            conteudos,
+            multiplaEscolha,
+            publica,
+            idsQuestoes,
+            usuario));
   }
 }

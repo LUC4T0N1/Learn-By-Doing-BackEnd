@@ -7,9 +7,10 @@ import javax.persistence.*;
 @Entity(name = "questao")
 public class Questao extends ObjetoDeDominio {
 
-  @Column private String enunciado;
+  @Column(length = 20000, columnDefinition = "TEXT")
+  private String enunciado;
 
-  @Column(name = "resposta_correta")
+  @Column(length = 20000, columnDefinition = "TEXT", name = "resposta_correta")
   private String respostaCorreta;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "questao")

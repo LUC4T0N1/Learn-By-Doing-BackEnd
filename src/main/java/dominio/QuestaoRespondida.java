@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 public class QuestaoRespondida extends ObjetoDeDominio {
   @ManyToOne private Questao questao;
 
-  @Column(name = "resposta_aluno")
+  @Column(length = 20000, columnDefinition = "TEXT", name = "resposta_aluno")
   private String respostaAluno;
 
   @Column(name = "nota_aluno")
@@ -18,7 +18,7 @@ public class QuestaoRespondida extends ObjetoDeDominio {
 
   @ManyToOne private ProvaRespondida prova;
 
-  @Column(name = "comentario_professor")
+  @Column(length = 20000, columnDefinition = "TEXT", name = "comentario_professor")
   private String comentarioProfessor;
 
   protected QuestaoRespondida() {}
