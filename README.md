@@ -55,8 +55,7 @@ See all the tests already created and solved by you. Track your progress and gra
 git clone https://github.com/LUC4T0N1/Learn-By-Doing-BackEnd
 
 #run project
-  npm install
-  ./mvnw quarkus:dev
+./mvnw quarkus:dev
 ```
 
 ## Author
