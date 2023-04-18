@@ -1,30 +1,66 @@
-# getting-started project
+# Learn By Doing
+[![NPM](https://img.shields.io/npm/l/react)](https://github.com/LUC4T0N1/Learn-By-Doing-BackEnd/blob/master/LICENCE)
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+# About the project
+https://learn-by-doing.netlify.app/
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+An educational system focused on user learning. It provides an environment where any user can create and resolve tests on any subject. Right after the completion, it is possible to see the answers and even the correction of the test performed. The system has a wide search engine, which facilitates the search for testes and subjects, in addition to allowing the use of questions created by other users in your own tests.
+This is the repository for the Back End code. to check the Front End code click here -> https://github.com/LUC4T0N1/Learn-By-Doing-FrontEnd
 
-## Running the aplicacao in dev mode
+![Home](https://github.com/LUC4T0N1/projects-prints/raw/master/LBD/Home.png)
 
-You can run your aplicacao in dev mode that enables live coding using:
+# Functionalities
+In this website you can switch between portuguese and english languages using a button on the navbar.
+
+## Create account
+To use the system the user needs to create an account and login. For that, is only needed a name, an email and a password.
+
+## Create Tests
+Create public tests for everyone to solve, or create a private test. Use public questions created by others or create your own questions.
+![Create](https://github.com/LUC4T0N1/projects-prints/raw/master/LBD/CreateTest.png)
+
+## Take Tests
+Take public tests to train your knowledge, or a private test to be evaluated. Filter exams by content, size, difficulty or popularity.
+![Take](https://github.com/LUC4T0N1/projects-prints/raw/master/LBD/TakeTest.png)
+
+## Correct Tests
+Correct your tests solved by others. Multiple-choice questions are automatically corrected. Make a comment on each question.
+![Correct](https://github.com/LUC4T0N1/projects-prints/raw/master/LBD/Correcting.png)
+
+## Check your record
+See all the tests already created and solved by you. Track your progress and grades. See teachers' corrections to your completed tests.
+![Record](https://github.com/LUC4T0N1/projects-prints/raw/master/LBD/CheckingTest.png)
+![Profile](https://github.com/LUC4T0N1/projects-prints/raw/master/LBD/Profile.PNG)
+
+
+## Used Technologies
+
+### Back End
+
+- Quarkus | Java 
+- Mysql | Hibernate
+
+### Front End
+
+- React
+- HTML | CSS | JAVASCRIPT
+- Redux
+
+## Deploy
+- Netlify
+
+## How to run the project
+```bash
+#clone repo
+git clone https://github.com/LUC4T0N1/Learn-By-Doing-BackEnd
+
+#run project
+  npm install
+  ./mvnw quarkus:dev
 ```
-./mvnw quarkus:dev
-```
 
-## Packaging and running the aplicacao
+## Author
 
-The aplicacao can be packaged using `./mvnw package`.
-It produces the `getting-started-1.0-SNAPSHOT-runner.jar` file in the `/target` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
+Lucas Moniz de Arruda
 
-The aplicacao is now runnable using `java -jar target/getting-started-1.0-SNAPSHOT-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using: `./mvnw package -Pnative`.
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
-
-You can then execute your native executable with: `./target/getting-started-1.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
+https://www.linkedin.com/in/lucas-moniz-de-arruda/
