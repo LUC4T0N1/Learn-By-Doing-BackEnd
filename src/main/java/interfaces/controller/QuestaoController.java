@@ -74,7 +74,7 @@ public class QuestaoController {
       @QueryParam("conteudos") List<Integer> conteudos,
       @QueryParam("questoes") List<Long> idsQuestoes) {
 
-    Log.info(divisao + "\n Iniciando Busca de Questões");
+    Log.info(divisao + "\n Iniciando Busca de Questões: ");
     return api.retornar(
         questaoService.filtrarQuestoes(
             pagina,
