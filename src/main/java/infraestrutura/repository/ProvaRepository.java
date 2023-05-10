@@ -62,7 +62,6 @@ public class ProvaRepository implements PanacheRepository<Prova> {
       if (prova == null)
         throw new WebApplicationException("Prova não encontrada", Response.Status.NOT_FOUND);
       List<ValorQuestao> valorQuestaos = valorQuestaoRepository.buscarValores(id);
-      Log.info("Prova buscada com sucesso!");
       return ProvaDto.instanciarPorEntidade(prova, respostas, setResposta, valorQuestaos, false);
     } catch (WebApplicationException e) {
       throw new WebApplicationException(e.getMessage(), e.getResponse());

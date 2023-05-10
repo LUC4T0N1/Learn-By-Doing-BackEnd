@@ -231,19 +231,19 @@ public class ProvaRespondidaRepository implements PanacheRepository<ProvaRespond
         if (!Objects.equals(nome, "null")) {
           provasRespondidas =
               find(
-                      "prova_id = ?1 AND nome_aluno = ?2",
+                      "prova_id = ?1 AND nome_aluno like ?2",
                       Sort.by(filtro).descending(),
                       id,
-                      nome + "%")
+                      "%"+nome+"%")
                   .page(Page.of(pagina, TAMANHO_PAGINA))
                   .list();
           total =
               (long)
                   find(
-                          "prova_id = ?1 AND nome_aluno = ?2",
+                          "prova_id = ?1 AND nome_aluno like ?2",
                           Sort.by(filtro).descending(),
                           id,
-                          nome + "%")
+                          "%"+nome+"%")
                       .list()
                       .size();
         } else {

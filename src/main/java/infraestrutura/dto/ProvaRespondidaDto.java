@@ -31,7 +31,6 @@ public class ProvaRespondidaDto {
     realizarProvaDto.setNomeAluno(provaRespondida.getNomeAluno());
     realizarProvaDto.setNotaAluno(provaRespondida.getNotaAluno());
     realizarProvaDto.setNotaMaxima(provaRespondida.getProva().getNotaMaxima());
-    Log.info("Aqui: " + provaRespondida.getProva().getNotaMaxima());
     realizarProvaDto.setQuestoesCorrigidas(provaRespondida.getQuestoesCorrigidas());
     realizarProvaDto.setTotalQuestoes(provaRespondida.getProva().getQuestoes().size());
     realizarProvaDto.setResolucoes(provaRespondida.getResolucoes());
